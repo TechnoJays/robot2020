@@ -1,0 +1,22 @@
+sudo: false
+language: python
+python:
+- '3.6'
+install:
+- pip install tox-travis
+- pip install coveralls
+script:
+- tox
+after_success:
+  - coveralls
+notifications:
+  slack:
+    on_success: change
+    on_failure: always
+    rooms:
+      secure: S/EQtiTFtKLF3XfUPr+wzCM0i1NChIBgjVjo/GOuDjyIZh4Cy9JbwYZK+9iMfQ18C3QHdfk3XdLsjv1Mz/jl97ZA89sqb5AOkwUE5roKatiCKCulj8WXEo0jD+ntYXKvI6/mTaih6twfHAAcybQGQUGqcp6/VPOy8woYENFm8q77WUl82UsUwoGnbacYUTT21pkpt0xZfHHnhfI7T7GfcDXTSWrsQRwl73BtosJ2myjI7Q51aRSZjVEuoLWR6ToOnydIh9oXMf2x5QZyOmTMgtGxCyxdhJZi+wO6J7IS/fjSJoFZs/bnt4Upy+8B5JQxqkWCy7Xzs/WgyO7xfFFNwFtqZiQTPrEOgzcdkW1t/hV4f2hO4MXVlyC9lKHsp3XeYscWpsbwJ7R72lOH8XILt6+Q93vi/diXgS6QQs8BYe9JJou5APrMCipgzL7gcjGJgUQT30IPk28o8M8WA2RYqz2P1fv7ZbSFhb73fYcDH0+XDWDz2KfAYBrqzApi5oMGagb8Oqoi/OCK0D8UN6YyiiCLoTkdz9jVMWAFtRjwSuCyilrj7U65hZ/Yyj0PPyck1MZSJbT7sLTAwI5a2MxXGGWOj1f13oh3ESOX/Uw3Jl5y0sYoc3jyQNK8bbU6uFYnNpzAk/cAFnKOUWtGlNkka0zPqnYdBaGA7EfwSJ0bVKY=
+  email:
+    recipients:
+    - derelle.redmond@gmail.com
+    on_success: never
+    on_failure: change
