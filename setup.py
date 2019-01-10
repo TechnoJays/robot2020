@@ -17,13 +17,13 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='team94_robot_2018',  # Required
-    version='0.1.0',  # Required
+    name='team94_robot_2019',  # Required
+    version='0.0.1',  # Required
     maintainer='Aaron DeGrow',
     maintainer_email='ninetyfouriors@gmail.com',
     description='NinetyFouriors Team 94 robot code',  # Required
     long_description=long_description,  # Optional
-    url='https://github.com/TechnoJays/robot2018',  # Optional
+    url='https://github.com/TechnoJays/robot2019',  # Optional
     classifiers=[  # Optional
         'Development Status :: 4 - Beta',
         'Environment :: roboRIO'
