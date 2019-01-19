@@ -33,10 +33,10 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    keywords='first team94 roboPy',  # Optional
+    keywords='first frc team94 robotPy',  # Optional
     packages=find_packages(exclude=["tests/*"]),  # Required
     install_requires=['pyfrc'],  # Optional
     extras_require={  # Optional
-        'test': ['tox', 'coverage'],
+        'test': ['black', 'pipenv', 'tox', 'tox-pipenv', 'coverage'],
     }
 )
