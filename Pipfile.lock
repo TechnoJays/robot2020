@@ -1,0 +1,133 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "c2f5aac49cf62cc6cfc07a904a8ce1516f1c30859dced072a862ddb426b7482b"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.6"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "atomicwrites": {
+            "hashes": [
+                "sha256:0312ad34fcad8fac3704d441f7b317e50af620823353ec657a53e981f92920c0",
+                "sha256:ec9ae8adaae229e4f8446952d204a3e4b5fdd2d099f9be3aaf556120135fb3ee"
+            ],
+            "version": "==1.2.1"
+        },
+        "attrs": {
+            "hashes": [
+                "sha256:10cbf6e27dbce8c30807caf056c8eb50917e0eaafe86347671b57254006c3e69",
+                "sha256:ca4be454458f9dec299268d472aaa5a11f67a4ff70093396e1ceae9c76cf4bbb"
+            ],
+            "version": "==18.2.0"
+        },
+        "more-itertools": {
+            "hashes": [
+                "sha256:38a936c0a6d98a38bcc2d03fdaaedaba9f412879461dd2ceff8d37564d6522e4",
+                "sha256:c0a5785b1109a6bd7fac76d6837fd1feca158e54e521ccd2ae8bfe393cc9d4fc",
+                "sha256:fe7a7cae1ccb57d33952113ff4fa1bc5f879963600ed74918f1236e212ee50b9"
+            ],
+            "version": "==5.0.0"
+        },
+        "pint": {
+            "hashes": [
+                "sha256:32d8a9a9d63f4f81194c0014b3b742679dce81a26d45127d9810a68a561fe4e2",
+                "sha256:7ece3f639ad58073ce49982b022d464014e6d91d0b3eaa89c8e8ea9c38e32659"
+            ],
+            "version": "==0.9"
+        },
+        "pluggy": {
+            "hashes": [
+                "sha256:8ddc32f03971bfdf900a81961a48ccf2fb677cf7715108f85295c67405798616",
+                "sha256:980710797ff6a041e9a73a5787804f848996ecaa6f8a1b1e08224a5894f2074a"
+            ],
+            "version": "==0.8.1"
+        },
+        "py": {
+            "hashes": [
+                "sha256:bf92637198836372b520efcba9e020c330123be8ce527e535d185ed4b6f45694",
+                "sha256:e76826342cefe3c3d5f7e8ee4316b80d1dd8a300781612ddbc765c17ba25a6c6"
+            ],
+            "version": "==1.7.0"
+        },
+        "pyfrc": {
+            "hashes": [
+                "sha256:372fbf008a07637d0f93cfb134ebc41884024b6898747730b10bb4afd15127da",
+                "sha256:834da6ee5908c57fc9093b03895a698bcba8e58cee6de80543a17a2dcbb3917c"
+            ],
+            "version": "==2019.0.2"
+        },
+        "pynetconsole": {
+            "hashes": [
+                "sha256:0b442dcb66905452935ec93a1a48efab9b95df2151580895bc0040196948fbb0"
+            ],
+            "version": "==2.0.2"
+        },
+        "pynetworktables": {
+            "hashes": [
+                "sha256:7ae4dc368f6c943e518e43ba9c37f5dfa817086d714df154d13df986c85dbd4f",
+                "sha256:9ca182f802c434718f99cfc7dd0635e769fe708aff4961f138ad828841de37b3"
+            ],
+            "version": "==2019.0.0"
+        },
+        "pytest": {
+            "hashes": [
+                "sha256:41568ea7ecb4a68d7f63837cf65b92ce8d0105e43196ff2b26622995bb3dc4b2",
+                "sha256:c3c573a29d7c9547fb90217ece8a8843aa0c1328a797e200290dc3d0b4b823be"
+            ],
+            "version": "==4.1.1"
+        },
+        "robotpy-hal-base": {
+            "hashes": [
+                "sha256:bc8657702c43d940b19c5fcb9ccc2a3d71e927772007225c936a076c1a7428f6"
+            ],
+            "version": "==2019.0.1"
+        },
+        "robotpy-hal-sim": {
+            "hashes": [
+                "sha256:4770cb27826e82ae8ae649e8ba45c21cc021244cfc96e5d325886a27ac9b6d49"
+            ],
+            "version": "==2019.0.1"
+        },
+        "robotpy-installer": {
+            "hashes": [
+                "sha256:ab0a233bd8b61e67efd3ec6aa76be2222bed1c76a5c2a547acc6963932a45bb4"
+            ],
+            "version": "==2019.1.0"
+        },
+        "robotpy-wpilib-utilities": {
+            "hashes": [
+                "sha256:51ea68b15860bea5af3f603e19b6e37372fcb342a218982d01798a3264750a7a",
+                "sha256:6a1032951696c161493938884353890f0a26d294c40f7950d8adedae2156a78e"
+            ],
+            "version": "==2019.0.1"
+        },
+        "six": {
+            "hashes": [
+                "sha256:3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c",
+                "sha256:d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
+            ],
+            "version": "==1.12.0"
+        },
+        "team94-robot-2019": {
+            "editable": true,
+            "path": "."
+        },
+        "wpilib": {
+            "hashes": [
+                "sha256:b6e5a98d37411f56c3355132ef882b21aa31d62e26f1f6ec3ea23099ba6a9291"
+            ],
+            "version": "==2019.0.1"
+        }
+    },
+    "develop": {}
+}
