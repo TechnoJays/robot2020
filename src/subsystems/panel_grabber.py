@@ -1,7 +1,7 @@
 import configparser
 from wpilib.command.subsystem import Subsystem
 from wpilib.solenoid import Solenoid
-from commands.do_nothing_panel_grabber import DoNothingPanelGrabber
+from commands.do_nothing_grabber import DoNothingPanelGrabber
 
 class PanelGrabber(Subsystem):
     """
