@@ -1,15 +1,9 @@
 from wpilib import command
 import wpilib
 
-from commands.autonomous import StartingPosition, CrossLine, AutoPlaceCube, FieldConfig
 from commands.do_nothing import DoNothing
 from oi import OI
 from subsystems.drivetrain import Drivetrain
-from subsystems.elevator import Elevator
-from subsystems.arm import Arm
-from subsystems.feeder import Feeder
-from subsystems.winch import Winch
-
 
 class MyRobot(wpilib.IterativeRobot):
     oi = None
@@ -37,7 +31,6 @@ class MyRobot(wpilib.IterativeRobot):
         #     self.autonomous_command = AutoPlaceCube(self, field_config, starting_position)
         # else:
         #     self.autonomous_command = DoNothing(self)
-        self.autonomous_command = CrossLine(self)
         self.autonomous_command.start()
 
     def testInit(self):
@@ -58,10 +51,7 @@ class MyRobot(wpilib.IterativeRobot):
         """
         self.oi = OI(self)
         self.drivetrain = Drivetrain(self)
-        self.elevator = Elevator(self)
         self.arm = Arm(self)
-        self.feeder = Feeder(self)
-        self.winch = Winch(self)
         self.oi.setup_button_bindings()
         # wpilib.CameraServer.launch()
 
