@@ -4,6 +4,8 @@ from wpilib.smartdashboard import SmartDashboard
 from wpilib.sendablechooser import SendableChooser
 from wpilib.buttons.joystickbutton import JoystickButton
 
+from commands.release_panel import ReleasePanel
+
 class JoystickAxis(object):
     """Enumerates joystick axis."""
     LEFTX = 0
@@ -59,17 +61,17 @@ class OI:
         self._create_smartdashboard_buttons()
 
     def setup_button_bindings(self):
-        #release_gear_a_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
-        #release_gear_a_button.whileHeld(ReleaseGear(self.robot))
+        release_panel_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
+        release_panel_button.whileHeld(ReleasePanel(self.robot))
 
-        open_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTBUMPER)
-        close_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTTRIGGER)
-
-        raise_arms_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.Y)
-        lower_arms_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
-
-        raise_winch_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTBUMPER)
-        lower_winch_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTTRIGGER)
+        # open_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTBUMPER)
+        # close_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTTRIGGER)
+        #
+        # raise_arms_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.Y)
+        # lower_arms_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
+        #
+        # raise_winch_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTBUMPER)
+        # lower_winch_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.LEFTTRIGGER)
 
     def get_axis(self, user, axis):
         """Read axis value for specified controller/axis.
