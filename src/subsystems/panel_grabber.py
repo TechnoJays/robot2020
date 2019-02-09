@@ -30,7 +30,7 @@ class PanelGrabber(Subsystem):
     def initDefaultCommand(self):
         self.setDefaultCommand(DoNothingPanelGrabber(self._robot))
 
-    def set_gear_release(self, state):
+    def set_panel_release(self, state):
         if self._solenoid:
             self._solenoid.set(state)
 
