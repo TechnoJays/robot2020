@@ -2,8 +2,8 @@ import configparser
 from wpilib.command.subsystem import Subsystem
 from wpilib.talon import Talon
 from wpilib.smartdashboard import SmartDashboard
-from commands.extend_arm_to_position import ExtendArmToPosition
 from wpilib.encoder import Encoder
+from commands.move_arm import MoveArm
 
 class Arm(Subsystem):
     MOTOR_SECTION = "ElevatorMotor"
@@ -35,7 +35,7 @@ class Arm(Subsystem):
         super().__init__(name=name)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(ExtendArmToPosition(self._robot))
+        self.setDefaultCommand(MoveArm(self._robot, 0.0))
 
     def move_arm(self, speed):
         if not self._motor:
