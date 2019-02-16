@@ -2,8 +2,8 @@ import configparser
 from wpilib.command.subsystem import Subsystem
 from wpilib.pwmtalonsrx import PWMTalonSRX
 from wpilib.smartdashboard import SmartDashboard
-from commands.extend_arm_to_position import ExtendArmToPosition
 from wpilib.encoder import Encoder
+from commands.do_nothing_arm import DoNothingArm
 
 class Arm(Subsystem):
     MOTOR_SECTION = "ArmMotor"
@@ -36,8 +36,7 @@ class Arm(Subsystem):
         super().__init__(name=name)
 
     def initDefaultCommand(self):
-        # need encoder position here as well
-        self.setDefaultCommand(ExtendArmToPosition(self._robot, 1, 1))
+        self.setDefaultCommand(DoNothingArm(self._robot))
 
     def move_arm(self, speed):
         if not self._motor:
@@ -59,7 +58,6 @@ class Arm(Subsystem):
         if self._encoder:
             self._encoder.reset()
             self._encoder_value = self._encoder.get()
-        self._update_smartdashboard(0.0)
         return self._encoder_value
 
     def _update_smartdashboard(self, speed):
