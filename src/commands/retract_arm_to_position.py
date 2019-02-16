@@ -21,7 +21,7 @@ class RetractArmToPosition(Command):
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        return self.robot.arm.get_encoder_value() <= self._encoder_target or self.isTimedOut()
+        return self.robot.arm.get_encoder_value() >= self._encoder_target or self.isTimedOut()
 
     def end(self):
         """Called once after isFinished returns true"""
