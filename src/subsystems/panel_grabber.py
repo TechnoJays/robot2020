@@ -12,9 +12,9 @@ class PanelGrabber(Subsystem):
         enable/disable closed loop control.
         """
     # Config file section names
-    _release_section = "PanelGrabber"
-    _enabled_key = "ENABLED"
-    _solenoid_channel_key = "SOLENOID_CHANNEL"
+    PANEL_SECTION = "PanelGrabber"
+    ENABLED_KEY = "ENABLED"
+    SOLENOID_CHANNEL_KEY = "SOLENOID_CHANNEL"
 
     _robot = None
     _config = None
@@ -35,6 +35,6 @@ class PanelGrabber(Subsystem):
             self._solenoid.set(state)
 
     def _init_components(self):
-        if self._config.getboolean(PanelGrabber._release_section, PanelGrabber._enabled_key):
-            solenoid_channel = self._config.getint(PanelGrabber._release_section, PanelGrabber._solenoid_channel_key)
+        if self._config.getboolean(PanelGrabber.PANEL_SECTION, PanelGrabber.ENABLED_KEY):
+            solenoid_channel = self._config.getint(PanelGrabber.PANEL_SECTION, PanelGrabber.SOLENOID_CHANNEL_KEY)
             self._solenoid = Solenoid(solenoid_channel)

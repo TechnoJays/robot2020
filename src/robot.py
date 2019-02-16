@@ -6,11 +6,13 @@ from oi import OI
 from subsystems.drivetrain import Drivetrain
 from subsystems.panel_grabber import PanelGrabber
 from subsystems.arm import Arm
+from subsystems.wheel_lift import WheelLift
 
 class MyRobot(wpilib.IterativeRobot):
     oi = None
     drivetrain = None
     arm = None
+    wheel_lift = None
     panel_grabber = None
     autonomous_command = None
 
@@ -52,6 +54,7 @@ class MyRobot(wpilib.IterativeRobot):
         self.oi = OI(self)
         self.drivetrain = Drivetrain(self)
         self.arm = Arm(self)
+        self.wheel_lift = WheelLift(self)
         self.panel_grabber = PanelGrabber(self)
         self.oi.setup_button_bindings()
         # wpilib.CameraServer.launch()
