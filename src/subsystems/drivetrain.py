@@ -2,7 +2,7 @@ import configparser
 from wpilib.command.subsystem import Subsystem
 from wpilib.encoder import Encoder
 from wpilib.drive import DifferentialDrive
-from wpilib.talon import Talon
+from wpilib.pwmtalonsrx import PWMTalonSRX
 from wpilib.adxrs450_gyro import ADXRS450_Gyro
 from wpilib.smartdashboard import SmartDashboard
 from commands.tank_drive import TankDrive
@@ -20,7 +20,7 @@ class Drivetrain(Subsystem):
     A_CHANNEL = "A_CHANNEL"
     B_CHANNEL = "B_CHANNEL"
     INVERTED_KEY = "INVERTED"
-    ARCADE_DRIVE_ROTATION_INVERTED_KEY = "ARCADE_DRIVE_ROTATION_INVERTED"
+    # ARCADE_DRIVE_ROTATION_INVERTED_KEY = "ARCADE_DRIVE_ROTATION_INVERTED"
     TYPE_KEY = "TYPE"
     CHANNEL_KEY = "CHANNEL"
     REVERSED_KEY = "REVERSED"
@@ -59,7 +59,8 @@ class Drivetrain(Subsystem):
     _gyro = None
     _gyro_angle = 0.0
 
-    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    # def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
@@ -176,8 +177,8 @@ class Drivetrain(Subsystem):
         self._modifier_scaling = self._config.getfloat(self.GENERAL_SECTION, Drivetrain.MODIFIER_SCALING_KEY)
         self._dpad_scaling = self._config.getfloat(self.GENERAL_SECTION, Drivetrain.DPAD_SCALING_KEY)
 
-        if not self._config.getboolean(self.GENERAL_SECTION, "ARCADE_DRIVE_ROTATION_INVERTED"):
-            self._arcade_rotation_modifier = 1
+        # if not self._config.getboolean(self.GENERAL_SECTION, "ARCADE_DRIVE_ROTATION_INVERTED"):
+        #     self._arcade_rotation_modifier = 1
 
         if self._config.getboolean(Drivetrain.LEFT_ENCODER_SECTION, Drivetrain.ENABLED_KEY):
             self._left_encoder_a_channel = self._config.getint(self.LEFT_ENCODER_SECTION, Drivetrain.A_CHANNEL)
@@ -203,12 +204,12 @@ class Drivetrain(Subsystem):
             self._gyro = ADXRS450_Gyro(gyro_channel)
 
         if self._config.getboolean(Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.ENABLED_KEY):
-            self._left_motor = Talon(self._config.getint(self.LEFT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
+            self._left_motor = PWMTalonSRX(self._config.getint(self.LEFT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
             self._left_motor.setInverted(self._config.getboolean(
                 Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.INVERTED_KEY))
 
         if self._config.getboolean(Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.ENABLED_KEY):
-            self._right_motor = Talon(self._config.getint(self.RIGHT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
+            self._right_motor = PWMTalonSRX(self._config.getint(self.RIGHT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
             self._right_motor.setInverted(self._config.getboolean(
                 Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.INVERTED_KEY))
 

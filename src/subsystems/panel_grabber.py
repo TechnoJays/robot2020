@@ -20,7 +20,8 @@ class PanelGrabber(Subsystem):
     _config = None
     _solenoid = None
 
-    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    # def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)

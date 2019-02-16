@@ -52,7 +52,8 @@ class OI:
 
     FULL_SPEED_AHEAD: float = 1.0
 
-    def __init__(self, robot, configfile='/home/lvuser/py/configs/joysticks.ini'):
+    # def __init__(self, robot, configfile='/home/lvuser/py/configs/joysticks.ini'):
+    def __init__(self, robot, configfile='./configs/joysticks.ini'):
         self.robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
@@ -73,9 +74,11 @@ class OI:
         raise_rear_wheels_button.whileHeld(RaiseRearWheels(self.robot))
 
         extend_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.X)
-        extend_arm_button.whenPressed(ExtendArmToPosition(self.robot))
+        # need to get an encoder position to pass into this call
+        extend_arm_button.whenPressed(ExtendArmToPosition(self.robot, 1, 1))
         retract_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.Y)
-        retract_arm_button.whenPressed(RetractArmToPosition(self.robot))
+        # same deal, need encoder position
+        retract_arm_button.whenPressed(RetractArmToPosition(self.robot, 1, 1))
 
 
 
@@ -129,17 +132,18 @@ class OI:
         return self._controllers[user].getRawButton(button)
 
     def _create_smartdashboard_buttons(self):
-        self._auto_program_chooser = SendableChooser()
-        self._auto_program_chooser.addDefault("Cross Line", 1)
-        self._auto_program_chooser.addObject("Place Cube", 2)
-        self._auto_program_chooser.addObject("Do Nothing", 3)
-        SmartDashboard.putData("Autonomous", self._auto_program_chooser)
+        return
+        # self._auto_program_chooser = SendableChooser()
+        # self._auto_program_chooser.addDefault("Cross Line", 1)
+        # self._auto_program_chooser.addObject("Place Cube", 2)
+        # self._auto_program_chooser.addObject("Do Nothing", 3)
+        # SmartDashboard.putData("Autonomous", self._auto_program_chooser)
 
-        self._starting_chooser = SendableChooser()
-        self._starting_chooser.addDefault("Left", 1)
-        self._starting_chooser.addObject("Center", 2)
-        self._starting_chooser.addObject("Right", 3)
-        SmartDashboard.putData("Starting_Position", self._starting_chooser)
+        # self._starting_chooser = SendableChooser()
+        # self._starting_chooser.addDefault("Left", 1)
+        # self._starting_chooser.addObject("Center", 2)
+        # self._starting_chooser.addObject("Right", 3)
+        # SmartDashboard.putData("Starting_Position", self._starting_chooser)
 
     def get_auto_choice(self):
         return self._auto_program_chooser.getSelected()
