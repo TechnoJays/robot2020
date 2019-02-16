@@ -41,6 +41,7 @@ class WheelLift(Subsystem):
         if self._rear_solenoid:
             self._rear_solenoid.set(state)
 
+    # todo: add ability to enable/disable front/rear independently
     def _init_components(self):
         if self._config.getboolean(WheelLift.LIFT_SECTION, WheelLift.ENABLED_KEY):
             front_solenoid_channel = self._config.getint(WheelLift.LIFT_SECTION, WheelLift.FRONT_SOLENOID_CHANNEL_KEY)
