@@ -3,8 +3,11 @@ import wpilib
 from wpilib.smartdashboard import SmartDashboard
 from wpilib.sendablechooser import SendableChooser
 from wpilib.buttons.joystickbutton import JoystickButton
-
 from commands.release_panel import ReleasePanel
+from commands.extend_arm_to_position import ExtendArmToPosition
+from commands.retract_arm_to_position import RetractArmToPosition
+from commands.raise_front_wheels import RaiseFrontWheels
+from commands.raise_rear_wheels import RaiseRearWheels
 
 class JoystickAxis(object):
     """Enumerates joystick axis."""
@@ -63,6 +66,18 @@ class OI:
     def setup_button_bindings(self):
         release_panel_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
         release_panel_button.whileHeld(ReleasePanel(self.robot))
+
+        raise_front_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.RIGHTTRIGGER)
+        raise_front_wheels_button.whileHeld(RaiseFrontWheels(self.robot))
+        raise_rear_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.LEFTTRIGGER)
+        raise_rear_wheels_button.whileHeld(RaiseRearWheels(self.robot))
+
+        extend_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.X)
+        extend_arm_button.whenPressed(ExtendArmToPosition(self.robot))
+        retract_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.Y)
+        retract_arm_button.whenPressed(RetractArmToPosition(self.robot))
+
+
 
         # open_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTBUMPER)
         # close_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.RIGHTTRIGGER)

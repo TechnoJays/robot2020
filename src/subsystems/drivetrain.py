@@ -2,7 +2,7 @@ import configparser
 from wpilib.command.subsystem import Subsystem
 from wpilib.encoder import Encoder
 from wpilib.drive import DifferentialDrive
-from wpilib.spark import Spark
+from wpilib.talon import Talon
 from wpilib.adxrs450_gyro import ADXRS450_Gyro
 from wpilib.smartdashboard import SmartDashboard
 from commands.tank_drive import TankDrive
@@ -203,12 +203,12 @@ class Drivetrain(Subsystem):
             self._gyro = ADXRS450_Gyro(gyro_channel)
 
         if self._config.getboolean(Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.ENABLED_KEY):
-            self._left_motor = Spark(self._config.getint(self.LEFT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
+            self._left_motor = Talon(self._config.getint(self.LEFT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
             self._left_motor.setInverted(self._config.getboolean(
                 Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.INVERTED_KEY))
 
         if self._config.getboolean(Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.ENABLED_KEY):
-            self._right_motor = Spark(self._config.getint(self.RIGHT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
+            self._right_motor = Talon(self._config.getint(self.RIGHT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
             self._right_motor.setInverted(self._config.getboolean(
                 Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.INVERTED_KEY))
 
