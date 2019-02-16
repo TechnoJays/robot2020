@@ -3,7 +3,7 @@ from wpilib.command.subsystem import Subsystem
 from wpilib.talon import Talon
 from wpilib.smartdashboard import SmartDashboard
 from wpilib.encoder import Encoder
-from commands.move_arm import MoveArm
+from commands.do_nothing_arm import DoNothingArm
 
 class Arm(Subsystem):
     MOTOR_SECTION = "ElevatorMotor"
@@ -35,7 +35,7 @@ class Arm(Subsystem):
         super().__init__(name=name)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(MoveArm(self._robot, 0.0))
+        self.setDefaultCommand(DoNothingArm(self._robot))
 
     def move_arm(self, speed):
         if not self._motor:
@@ -57,7 +57,6 @@ class Arm(Subsystem):
         if self._encoder:
             self._encoder.reset()
             self._encoder_value = self._encoder.get()
-        self._update_smartdashboard(0.0)
         return self._encoder_value
 
     def _update_smartdashboard(self, speed):

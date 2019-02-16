@@ -16,10 +16,7 @@ class MoveArm(Command):
      def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
         right_stick = self.robot.oi.get_axis(UserController.SCORING, JoystickAxis.RIGHTY)
-        if right_stick > 0.0:
-            self.robot.arm.move_arm(right_stick)
-        else:
-            self.robot.arm.move_arm(0.0)
+        self.robot.arm.move_arm(right_stick)
         return Command.execute(self)
 
      def isFinished(self):
