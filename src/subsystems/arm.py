@@ -1,13 +1,13 @@
 import configparser
 from wpilib.command.subsystem import Subsystem
-from wpilib.talon import Talon
+from wpilib.pwmtalonsrx import PWMTalonSRX
 from wpilib.smartdashboard import SmartDashboard
 from wpilib.encoder import Encoder
 from commands.do_nothing_arm import DoNothingArm
 
 class Arm(Subsystem):
-    MOTOR_SECTION = "ElevatorMotor"
-    ENCODER_SECTION = "ElevatorEncoder"
+    MOTOR_SECTION = "ArmMotor"
+    ENCODER_SECTION = "ArmEncoder"
     SPEED_SCALING = "SPEED_SCALING"
     ENABLED = "ENABLED"
     CHANNEL = "CHANNEL"
@@ -28,7 +28,8 @@ class Arm(Subsystem):
     _encoder_top_bound = None
     _encoder_bottom_bound = None
 
-    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    # def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
         self._robot = robot
         self._subsystem_config = configfile
         self._init_components()
@@ -72,7 +73,7 @@ class Arm(Subsystem):
             motor_channel = config.getint(self.MOTOR_SECTION, self.CHANNEL)
             motor_inverted = config.getboolean(self.MOTOR_SECTION, self.INVERTED)
             self._speed_scaling = config.getfloat(self.MOTOR_SECTION, self.SPEED_SCALING)
-            self._motor = Talon(motor_channel)
+            self._motor = PWMTalonSRX(motor_channel)
             if self._motor:
                 self._motor.setInverted(motor_inverted)
 
