@@ -2,34 +2,32 @@ import configparser
 from wpilib.command.subsystem import Subsystem
 from wpilib.pwmtalonsrx import PWMTalonSRX
 from wpilib.smartdashboard import SmartDashboard
-from wpilib.encoder import Encoder
+from wpilib.analogpotentiometer import AnalogPotentiometer
 from commands.do_nothing_arm import DoNothingArm
+
 
 class Arm(Subsystem):
     MOTOR_SECTION = "ArmMotor"
-    ENCODER_SECTION = "ArmEncoder"
+    POTENTIOMETER_SECTION = "ArmPotentiometer"
     SPEED_SCALING = "SPEED_SCALING"
     ENABLED = "ENABLED"
     CHANNEL = "CHANNEL"
     INVERTED = "INVERTED"
-    A_CHANNEL = "A_CHANNEL"
-    B_CHANNEL = "B_CHANNEL"
-    REVERSED = "REVERSED"
-    TYPE = "TYPE"
     TOP_BOUND = "TOP_BOUND"
     BOTTOM_BOUND = "BOTTOM_BOUND"
+    SCALING = "SCALING"
+    OFFSET = "OFFSET"
 
     _robot = None
     _subsystem_config = None
     _motor = None
     _speed_scaling = 1.0
-    _encoder = None
-    _encoder_value = 0
-    _encoder_top_bound = None
-    _encoder_bottom_bound = None
+    _potentiometer = None
+    _potentiometer_value = 0.0
+    _top_bound = None
+    _bottom_bound = None
 
     def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
-        # def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
         self._robot = robot
         self._subsystem_config = configfile
         self._init_components()
@@ -43,25 +41,19 @@ class Arm(Subsystem):
             return
         scaled_speed = speed * self._speed_scaling
         self._motor.setSpeed(scaled_speed)
-        self.get_encoder_value()
+        self.get_potentiometer_value()
         self._update_smartdashboard(scaled_speed)
 
-    def is_encoder_enabled(self):
-        return self._encoder is not None
+    def is_potentiometer_enabled(self):
+        return self._potentiometer is not None
 
-    def get_encoder_value(self):
-        if self._encoder:
-            self._encoder_value = self._encoder.get()
-        return self._encoder_value
-
-    def reset_encoder_value(self):
-        if self._encoder:
-            self._encoder.reset()
-            self._encoder_value = self._encoder.get()
-        return self._encoder_value
+    def get_potentiometer_value(self):
+        if self._potentiometer:
+            self._potentiometer_value = self._potentiometer.get()
+        return self._potentiometer_value
 
     def _update_smartdashboard(self, speed):
-        SmartDashboard.putNumber("Arm Encoder", self._encoder_value)
+        SmartDashboard.putNumber("Arm Pot", self._potentiometer_value)
         SmartDashboard.putNumber("Arm Speed", speed)
 
     def _init_components(self):
@@ -77,11 +69,10 @@ class Arm(Subsystem):
             if self._motor:
                 self._motor.setInverted(motor_inverted)
 
-        if config.getboolean(self.ENCODER_SECTION, self.ENABLED):
-            encoder_a_channel = config.getint(self.ENCODER_SECTION, self.A_CHANNEL)
-            encoder_b_channel = config.getint(self.ENCODER_SECTION, self.B_CHANNEL)
-            encoder_reversed = config.getboolean(self.ENCODER_SECTION, self.REVERSED)
-            encoder_type = config.getint(self.ENCODER_SECTION, self.TYPE)
-            self._encoder_top_bound = config.getint(self.ENCODER_SECTION, self.TOP_BOUND)
-            self._encoder_bottom_bound = config.getint(self.ENCODER_SECTION, self.BOTTOM_BOUND)
-            self._encoder = Encoder(encoder_a_channel, encoder_b_channel, encoder_reversed, encoder_type)
+        if config.getboolean(self.POTENTIOMETER_SECTION, self.ENABLED):
+            channel = config.getint(self.POTENTIOMETER_SECTION, self.CHANNEL)
+            scaling = config.getfloat(self.POTENTIOMETER_SECTION, self.SCALING)
+            offset = config.getfloat(self.POTENTIOMETER_SECTION, self.OFFSET)
+            self._top_bound = config.getint(self.POTENTIOMETER_SECTION, self.TOP_BOUND)
+            self._bottom_bound = config.getint(self.POTENTIOMETER_SECTION, self.BOTTOM_BOUND)
+            self._potentiometer = AnalogPotentiometer(channel, scaling, offset)
