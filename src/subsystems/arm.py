@@ -3,7 +3,7 @@ from wpilib.command.subsystem import Subsystem
 from wpilib.pwmtalonsrx import PWMTalonSRX
 from wpilib.smartdashboard import SmartDashboard
 from wpilib.analogpotentiometer import AnalogPotentiometer
-from commands.do_nothing_arm import DoNothingArm
+from commands.move_arm import MoveArm
 
 
 class Arm(Subsystem):
@@ -21,7 +21,7 @@ class Arm(Subsystem):
     _robot = None
     _subsystem_config = None
     _motor = None
-    _speed_scaling = 1.0
+    _speed_scaling = 0.2
     _potentiometer = None
     _potentiometer_value = 0.0
     _top_bound = None
@@ -34,7 +34,7 @@ class Arm(Subsystem):
         super().__init__(name=name)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(DoNothingArm(self._robot))
+        self.setDefaultCommand(MoveArm(self._robot, 1.0))
 
     def move_arm(self, speed):
         if not self._motor:
