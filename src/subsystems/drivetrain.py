@@ -59,8 +59,8 @@ class Drivetrain(Subsystem):
     _gyro = None
     _gyro_angle = 0.0
 
-    # def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
-    def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
+    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+        # def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)

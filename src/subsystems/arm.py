@@ -28,8 +28,8 @@ class Arm(Subsystem):
     _encoder_top_bound = None
     _encoder_bottom_bound = None
 
-    # def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
-    def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
+    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+        # def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
         self._robot = robot
         self._subsystem_config = configfile
         self._init_components()

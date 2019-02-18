@@ -33,6 +33,7 @@ class MyRobot(wpilib.IterativeRobot):
         #     self.autonomous_command = AutoPlaceCube(self, field_config, starting_position)
         # else:
         #     self.autonomous_command = DoNothing(self)
+        self.autonomous_command = DoNothing(self)
         self.autonomous_command.start()
 
     def testInit(self):
