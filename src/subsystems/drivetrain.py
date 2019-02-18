@@ -28,7 +28,7 @@ class Drivetrain(Subsystem):
     FAR_LEFT_KEY = "FAR_LEFT_CHANNEL"
     LEFT_KEY = "LEFT_CHANNEL"
     CENTER_KEY = "CENTER_CHANNEL"
-    RIGHT_KEY = "LEFT_CHANNEL"
+    RIGHT_KEY = "RIGHT_CHANNEL"
     FAR_RIGHT_KEY = "FAR_RIGHT_CHANNEL"
 
     # ARCADE_DRIVE_ROTATION_INVERTED_KEY = "ARCADE_DRIVE_ROTATION_INVERTED"
@@ -65,19 +65,10 @@ class Drivetrain(Subsystem):
     _right_encoder_count = 0
 
     _far_left_line_follow = None
-    _far_left_line_channel = None
-
     _left_line_follow = None
-    _left_line_follow_channel = None
-
     _center_line_follow = None
-    _center_line_follow_channel = None
-
     _right_line_follow = None
-    _right_line_follow_channel = None
-
     _far_right_line_follow = None
-    _far_right_line_follow_channel = None
 
     _sonar: MaxSonar = None
     _sonar_distance: float = 0
@@ -276,21 +267,21 @@ class Drivetrain(Subsystem):
         if self._config.getboolean(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.ENABLED_KEY):
             sensor_count = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.COUNT_KEY)
             if sensor_count > 3:
-                self._far_left_line_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.FAR_LEFT_KEY)
-                self._far_right_line_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.FAR_RIGHT_KEY)
-                if self._far_left_line_channel and self._far_right_line_channel:
-                    self._far_left_line_follow = DigitalInput(self._far_left_line_channel)
-                    self._far_right_line_follow = DigitalInput(self._far_right_line_channel)
+                far_left_line_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.FAR_LEFT_KEY)
+                far_right_line_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.FAR_RIGHT_KEY)
+                if far_left_line_channel and far_right_line_channel:
+                    self._far_left_line_follow = DigitalInput(far_left_line_channel)
+                    self._far_right_line_follow = DigitalInput(far_right_line_channel)
 
-            self._left_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.LEFT_KEY)
-            self._right_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.RIGHT_KEY)
-            if self._left_line_follow_channel and self._right_line_follow_channel:
-                self._left_line_follow = DigitalInput(self._left_line_follow_channel)
-                self._right_line_follow = DigitalInput(self._right_line_follow_channel)
+            left_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.LEFT_KEY)
+            right_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.RIGHT_KEY)
+            if left_line_follow_channel and right_line_follow_channel:
+                self._left_line_follow = DigitalInput(left_line_follow_channel)
+                self._right_line_follow = DigitalInput(right_line_follow_channel)
 
-            self._center_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.CENTER_KEY)
-            if self._center_line_follow_channel:
-                self._center_line_follow = DigitalInput(self._center_line_follow_channel)
+            center_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.CENTER_KEY)
+            if center_line_follow_channel:
+                self._center_line_follow = DigitalInput(center_line_follow_channel)
 
         if self._left_motor and self._right_motor:
             self._robot_drive = DifferentialDrive(self._left_motor, self._right_motor)
