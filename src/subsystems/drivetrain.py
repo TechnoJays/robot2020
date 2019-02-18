@@ -151,6 +151,7 @@ class Drivetrain(Subsystem):
         self.get_gyro_angle()
         self.get_left_encoder_value()
         self.get_right_encoder_value()
+        self.get_sonar_distance()
         self._update_smartdashboard_sensors()
 
     def arcade_drive(self, linear_distance, turn_angle, squared_inputs=True):
@@ -161,6 +162,7 @@ class Drivetrain(Subsystem):
         self.get_gyro_angle()
         self.get_left_encoder_value()
         self.get_right_encoder_value()
+        self.get_sonar_distance()
         self._update_smartdashboard_sensors()
 
     def _modify_turn_angle(self, turn_angle: float) -> float:
