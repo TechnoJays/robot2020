@@ -207,6 +207,13 @@ class Drivetrain(Subsystem):
         SmartDashboard.putNumber("Drivetrain Left Encoder", self._left_encoder_count)
         SmartDashboard.putNumber("Drivetrain Right Encoder", self._right_encoder_count)
         SmartDashboard.putNumber("Gyro Angle", self._gyro_angle)
+        line_state = self.get_line_follow_sate()
+        if len(line_state) > 3:
+            SmartDashboard.putBoolean("Far Left Line", line_state[0])
+            SmartDashboard.putBoolean("Far Right Line", line_state[4])
+        SmartDashboard.putBoolean("Left Line", line_state[1])
+        SmartDashboard.putBoolean("Right Line", line_state[3])
+        SmartDashboard.putBoolean("Center Line", line_state[2])
 
     def _init_components(self):
         self._max_speed = self._config.getfloat(self.GENERAL_SECTION, Drivetrain.MAX_SPEED_KEY)
