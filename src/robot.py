@@ -19,20 +19,6 @@ class MyRobot(wpilib.IterativeRobot):
     def autonomousInit(self):
         # Schedule the autonomous command
         self.drivetrain.reset_gyro_angle()
-
-        # Determine starting position and filed config
-        # starting_position = StartingPosition(self.oi.get_position())
-        # game_message = wpilib.DriverStation.getGameSpecificMessage()
-        # field_config = FieldConfig[game_message]
-        #
-        # auto_choice = self.oi.get_auto_choice()
-        #
-        # if auto_choice == 1:
-        #     self.autonomous_command = CrossLine(self)
-        # elif auto_choice == 2:
-        #     self.autonomous_command = AutoPlaceCube(self, field_config, starting_position)
-        # else:
-        #     self.autonomous_command = DoNothing(self)
         self.autonomous_command = DoNothing(self)
         self.autonomous_command.start()
 
@@ -42,10 +28,9 @@ class MyRobot(wpilib.IterativeRobot):
     def teleopInit(self):
         if self.autonomous_command:
             self.autonomous_command.cancel()
-        self.teleopInitialized = True
 
     def disabledInit(self):
-        self.disabledInitialized = True
+        pass
 
     def robotInit(self):
         """
@@ -58,7 +43,6 @@ class MyRobot(wpilib.IterativeRobot):
         self.wheel_lift = WheelLift(self)
         self.panel_grabber = PanelGrabber(self)
         self.oi.setup_button_bindings()
-        # wpilib.CameraServer.launch()
 
     def autonomousPeriodic(self):
         """This function is called periodically during autonomous."""
@@ -70,7 +54,8 @@ class MyRobot(wpilib.IterativeRobot):
 
     def testPeriodic(self):
         """This function is called periodically during test mode."""
-        wpilib.LiveWindow.run()
+        pass
+
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
