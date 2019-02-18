@@ -63,7 +63,7 @@ class Drivetrain(Subsystem):
     _right_encoder_reversed = None
     _right_encoder_type = None
     _right_encoder_count = 0
-    
+
     _far_left_line_follow = None
     _far_left_line_channel = None
 
