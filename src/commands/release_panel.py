@@ -13,7 +13,7 @@ class ReleasePanel(Command):
 
     def execute(self):
         """Called repeatedly when this Command is schedule to run"""
-        self.robot.panel_grabber.set_panel_release(False)
+        self.robot.panel_grabber.set_panel_release(True)
         return Command.execute(self)
 
     def isFinished(self):
@@ -22,7 +22,7 @@ class ReleasePanel(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self.robot.panel_grabber.set_panel_release(True)
+        self.robot.panel_grabber.set_panel_release(False)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
