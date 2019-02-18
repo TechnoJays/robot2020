@@ -1,7 +1,7 @@
 import pytest
 from commands.drive_time import DriveTime
 from subsystems.drivetrain import Drivetrain
-from stopwatch import Stopwatch
+from util.stopwatch import Stopwatch
 
 
 """

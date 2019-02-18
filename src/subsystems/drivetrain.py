@@ -7,6 +7,7 @@ from wpilib.drive import DifferentialDrive
 from wpilib.pwmtalonsrx import PWMTalonSRX
 from wpilib.adxrs450_gyro import ADXRS450_Gyro
 from wpilib.smartdashboard import SmartDashboard
+from util.sonar import MaxSonar
 from commands.tank_drive import TankDrive
 
 class Drivetrain(Subsystem):
@@ -17,6 +18,7 @@ class Drivetrain(Subsystem):
     LEFT_ENCODER_SECTION = "DrivetrainLeftEncoder"
     RIGHT_ENCODER_SECTION = "DrivetrainRightEncoder"
     GYRO_SECTION = "DrivetrainGyro"
+    SONAR_SECTION = "DrivetrainSonar"
     ENABLED_KEY = "ENABLED"
     A_CHANNEL = "A_CHANNEL"
     B_CHANNEL = "B_CHANNEL"
@@ -61,7 +63,7 @@ class Drivetrain(Subsystem):
     _right_encoder_reversed = None
     _right_encoder_type = None
     _right_encoder_count = 0
-
+    
     _far_left_line_follow = None
     _far_left_line_channel = None
 
@@ -77,14 +79,17 @@ class Drivetrain(Subsystem):
     _far_right_line_follow = None
     _far_right_line_follow_channel = None
 
+    _sonar: MaxSonar = None
+    _sonar_distance: float = 0
+
     _modifier_scaling = None
     _dpad_scaling = None
 
     _gyro = None
     _gyro_angle = 0.0
 
-    # def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
-    def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
+    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+        # def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
@@ -160,6 +165,11 @@ class Drivetrain(Subsystem):
         self._update_smartdashboard_sensors()
         return self._gyro_angle
 
+    def get_sonar_distance(self) -> float:
+        if self._sonar:
+            self._sonar_distance = self._sonar.getDistance()
+        return self._sonar_distance
+
     def is_encoder_enabled(self):
         return self._left_encoder is not None or self._right_encoder is not None
 
@@ -177,6 +187,7 @@ class Drivetrain(Subsystem):
         self.get_gyro_angle()
         self.get_left_encoder_value()
         self.get_right_encoder_value()
+        self.get_sonar_distance()
         self._update_smartdashboard_sensors()
 
     def arcade_drive(self, linear_distance, turn_angle, squared_inputs=True):
@@ -187,6 +198,7 @@ class Drivetrain(Subsystem):
         self.get_gyro_angle()
         self.get_left_encoder_value()
         self.get_right_encoder_value()
+        self.get_sonar_distance()
         self._update_smartdashboard_sensors()
 
     def _modify_turn_angle(self, turn_angle: float) -> float:
@@ -206,6 +218,7 @@ class Drivetrain(Subsystem):
     def _update_smartdashboard_sensors(self):
         SmartDashboard.putNumber("Drivetrain Left Encoder", self._left_encoder_count)
         SmartDashboard.putNumber("Drivetrain Right Encoder", self._right_encoder_count)
+        SmartDashboard.putNumber("Drivetrain Sonar Distance", self._sonar_distance)
         SmartDashboard.putNumber("Gyro Angle", self._gyro_angle)
         line_state = self.get_line_follow_sate()
         if len(line_state) > 3:
@@ -245,6 +258,10 @@ class Drivetrain(Subsystem):
         if self._config.getboolean(Drivetrain.GYRO_SECTION, Drivetrain.ENABLED_KEY):
             gyro_channel = self._config.getint(self.GYRO_SECTION, Drivetrain.CHANNEL_KEY)
             self._gyro = ADXRS450_Gyro(gyro_channel)
+
+        if self._config.getboolean(Drivetrain.SONAR_SECTION, Drivetrain.ENABLED_KEY):
+            sonar_channel = self._config.getint(self.SONAR_SECTION, Drivetrain.CHANNEL_KEY)
+            self._sonar = MaxSonar(sonar_channel)
 
         if self._config.getboolean(Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.ENABLED_KEY):
             self._left_motor = PWMTalonSRX(self._config.getint(self.LEFT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
