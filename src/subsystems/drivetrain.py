@@ -1,4 +1,6 @@
 import configparser
+
+from wpilib import DigitalInput
 from wpilib.command.subsystem import Subsystem
 from wpilib.encoder import Encoder
 from wpilib.drive import DifferentialDrive
@@ -6,7 +8,6 @@ from wpilib.pwmtalonsrx import PWMTalonSRX
 from wpilib.adxrs450_gyro import ADXRS450_Gyro
 from wpilib.smartdashboard import SmartDashboard
 from commands.tank_drive import TankDrive
-
 
 class Drivetrain(Subsystem):
     # Config file section names
@@ -20,6 +21,14 @@ class Drivetrain(Subsystem):
     A_CHANNEL = "A_CHANNEL"
     B_CHANNEL = "B_CHANNEL"
     INVERTED_KEY = "INVERTED"
+    LINEFOLLOW_SECTION = "DrivetrainLineFollow"
+    COUNT_KEY = "COUNT"
+    FAR_LEFT_KEY = "FAR_LEFT_CHANNEL"
+    LEFT_KEY = "LEFT_CHANNEL"
+    CENTER_KEY = "CENTER_CHANNEL"
+    RIGHT_KEY = "LEFT_CHANNEL"
+    FAR_RIGHT_KEY = "FAR_RIGHT_CHANNEL"
+
     # ARCADE_DRIVE_ROTATION_INVERTED_KEY = "ARCADE_DRIVE_ROTATION_INVERTED"
     TYPE_KEY = "TYPE"
     CHANNEL_KEY = "CHANNEL"
@@ -52,6 +61,21 @@ class Drivetrain(Subsystem):
     _right_encoder_reversed = None
     _right_encoder_type = None
     _right_encoder_count = 0
+
+    _far_left_line_follow = None
+    _far_left_line_channel = None
+
+    _left_line_follow = None
+    _left_line_follow_channel = None
+
+    _center_line_follow = None
+    _center_line_follow_channel = None
+
+    _right_line_follow = None
+    _right_line_follow_channel = None
+
+    _far_right_line_follow = None
+    _far_right_line_follow_channel = None
 
     _modifier_scaling = None
     _dpad_scaling = None
@@ -95,6 +119,18 @@ class Drivetrain(Subsystem):
             return self.get_right_encoder_value()
         else:
             return 0
+
+    def get_line_follow_sate(self):
+        if self._far_left_line_follow and self._far_right_line_follow:
+            return (self._far_left_line_follow.get(),
+                    self._left_line_follow.get(),
+                    self._center_line_follow.get(),
+                    self._right_line_follow,
+                    self._far_right_line_follow)
+        else:
+            return (self._left_line_follow.get(),
+                    self._center_line_follow.get(),
+                    self._right_line_follow)
 
     def reset_left_encoder_value(self):
         if self._left_encoder:
@@ -212,6 +248,25 @@ class Drivetrain(Subsystem):
             self._right_motor = PWMTalonSRX(self._config.getint(self.RIGHT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
             self._right_motor.setInverted(self._config.getboolean(
                 Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.INVERTED_KEY))
+
+        if self._config.getboolean(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.ENABLED_KEY):
+            sensor_count = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.COUNT_KEY)
+            if sensor_count > 3:
+                self._far_left_line_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.FAR_LEFT_KEY)
+                self._far_right_line_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.FAR_RIGHT_KEY)
+                if self._far_left_line_channel and self._far_right_line_channel:
+                    self._far_left_line_follow = DigitalInput(self._far_left_line_channel)
+                    self._far_right_line_follow = DigitalInput(self._far_right_line_channel)
+
+            self._left_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.LEFT_KEY)
+            self._right_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.RIGHT_KEY)
+            if self._left_line_follow_channel and self._right_line_follow_channel:
+                self._left_line_follow = DigitalInput(self._left_line_follow_channel)
+                self._right_line_follow = DigitalInput(self._right_line_follow_channel)
+
+            self._center_line_follow_channel = self._config.getint(Drivetrain.LINEFOLLOW_SECTION, Drivetrain.CENTER_KEY)
+            if self._center_line_follow_channel:
+                self._center_line_follow = DigitalInput(self._center_line_follow_channel)
 
         if self._left_motor and self._right_motor:
             self._robot_drive = DifferentialDrive(self._left_motor, self._right_motor)
