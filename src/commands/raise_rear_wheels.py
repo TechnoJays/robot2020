@@ -14,7 +14,7 @@ class RaiseRearWheels(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.wheel_lift.set_rear_solenoid(False)
+        self.robot.wheel_lift.set_rear_solenoid(True)
         return Command.execute(self)
 
     def isFinished(self):
@@ -23,7 +23,7 @@ class RaiseRearWheels(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self.robot.wheel_lift.set_rear_solenoid(True)
+        self.robot.wheel_lift.set_rear_solenoid(False)
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
