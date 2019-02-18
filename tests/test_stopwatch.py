@@ -1,5 +1,5 @@
 import pytest
-from stopwatch import Stopwatch
+from util.stopwatch import Stopwatch
 
 @pytest.fixture(scope="function")
 def stopwatch_default(robot):

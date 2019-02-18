@@ -1,7 +1,7 @@
 import pytest
 from commands.turn_time import TurnTime
 from subsystems.drivetrain import Drivetrain
-from stopwatch import Stopwatch
+from util.stopwatch import Stopwatch
 
 
 """

@@ -1,5 +1,5 @@
 from wpilib.command.command import Command
-from stopwatch import Stopwatch
+from util.stopwatch import Stopwatch
 
 
 class DriveTime(Command):
