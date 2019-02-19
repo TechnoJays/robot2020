@@ -64,7 +64,7 @@ class OI:
 
     def setup_button_bindings(self):
         # Panel grabber
-        panel_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.A)
+        panel_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
         panel_button.whileHeld(ReleasePanel(self.robot))
         # Wheel risers
         raise_front_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.RIGHTTRIGGER)
