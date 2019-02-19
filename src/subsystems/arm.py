@@ -44,6 +44,7 @@ class Arm(Subsystem):
         self.get_potentiometer_value()
         if self.is_potentiometer_enabled and ((scaled_speed > 0.0 and self._potentiometer_value >= self._top_bound) or
                                               (scaled_speed < 0.0 and self._potentiometer_value <= self._bottom_bound)):
+            self._motor.setSpeed(0.0)
             return
         self._motor.setSpeed(scaled_speed)
         self._update_smartdashboard(scaled_speed)
