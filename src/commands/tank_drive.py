@@ -18,7 +18,7 @@ class TankDrive(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        modifier = self.robot.oi.get_button_state(UserController.DRIVER, JoystickButtons.LEFTTRIGGER)
+        modifier = self.robot.oi.get_button_state(UserController.DRIVER, JoystickButtons.LEFTBUMPER)
         dpad_y = self.robot.oi.get_axis(UserController.DRIVER, JoystickAxis.DPADY)
         if dpad_y != 0.0:
             self.robot.drivetrain.arcade_drive(self._dpad_scaling * dpad_y, 0.0)
