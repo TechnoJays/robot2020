@@ -1,6 +1,7 @@
 from wpilib.command.command import Command
 from oi import JoystickAxis, UserController
 
+
 class MoveArm(Command):
 
      def __init__(self, robot, speed, name=None, timeout=15):

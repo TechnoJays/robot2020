@@ -1,5 +1,6 @@
 from wpilib.command.command import Command
 
+
 class DoNothingPanelGrabber(Command):
 
     def __init__(self, robot, name=None, timeout=None):
