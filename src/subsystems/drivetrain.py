@@ -2,7 +2,6 @@ import configparser
 
 from wpilib import DigitalInput
 from wpilib.command.subsystem import Subsystem
-from wpilib.encoder import Encoder
 from wpilib.drive import DifferentialDrive
 from wpilib.pwmtalonsrx import PWMTalonSRX
 from wpilib.adxrs450_gyro import ADXRS450_Gyro
@@ -15,13 +14,9 @@ class Drivetrain(Subsystem):
     GENERAL_SECTION = "DrivetrainGeneral"
     LEFT_MOTOR_SECTION = "DrivetrainLeftMotor"
     RIGHT_MOTOR_SECTION = "DrivetrainRightMotor"
-    LEFT_ENCODER_SECTION = "DrivetrainLeftEncoder"
-    RIGHT_ENCODER_SECTION = "DrivetrainRightEncoder"
     GYRO_SECTION = "DrivetrainGyro"
     SONAR_SECTION = "DrivetrainSonar"
     ENABLED_KEY = "ENABLED"
-    A_CHANNEL = "A_CHANNEL"
-    B_CHANNEL = "B_CHANNEL"
     INVERTED_KEY = "INVERTED"
     LINEFOLLOW_SECTION = "DrivetrainLineFollow"
     COUNT_KEY = "COUNT"
@@ -50,20 +45,6 @@ class Drivetrain(Subsystem):
     _right_motor = None
     _robot_drive = None
 
-    _left_encoder = None
-    _left_encoder_a_channel = None
-    _left_encoder_b_channel = None
-    _left_encoder_reversed = None
-    _left_encoder_type = None
-    _left_encoder_count = 0
-
-    _right_encoder = None
-    _right_encoder_a_channel = None
-    _right_encoder_b_channel = None
-    _right_encoder_reversed = None
-    _right_encoder_type = None
-    _right_encoder_count = 0
-
     _far_left_line_follow = None
     _left_line_follow = None
     _center_line_follow = None
@@ -80,7 +61,6 @@ class Drivetrain(Subsystem):
     _gyro_angle = 0.0
 
     def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
-        # def __init__(self, robot, name=None, configfile='./configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
@@ -94,28 +74,6 @@ class Drivetrain(Subsystem):
         self.setDefaultCommand(TankDrive(self._robot, 'TankDrive', modifier_scaling=self._modifier_scaling,
                                          dpad_scaling=self._dpad_scaling))
 
-    def get_left_encoder_value(self):
-        if self._left_encoder:
-            self._left_encoder_count = self._left_encoder.get()
-        return self._left_encoder_count
-
-    def get_right_encoder_value(self):
-        if self._right_encoder:
-            self._right_encoder_count = self._right_encoder.get()
-        return self._right_encoder_count
-
-    def get_encoder_value(self):
-        if self._left_encoder and self._right_encoder:
-            left_value = self.get_left_encoder_value()
-            right_value = self.get_right_encoder_value()
-            return int(round((left_value + right_value) / 2))
-        elif self._left_encoder:
-            return self.get_left_encoder_value()
-        elif self._right_encoder:
-            return self.get_right_encoder_value()
-        else:
-            return 0
-
     def get_line_follow_sate(self):
         if self._far_left_line_follow and self._far_right_line_follow:
             return (self._far_left_line_follow.get(),
@@ -127,22 +85,6 @@ class Drivetrain(Subsystem):
             return (self._left_line_follow.get(),
                     self._center_line_follow.get(),
                     self._right_line_follow)
-
-    def reset_left_encoder_value(self):
-        if self._left_encoder:
-            self._left_encoder_count = 0
-        self._update_smartdashboard_sensors()
-        return self._left_encoder_count
-
-    def reset_right_encoder_value(self):
-        if self._right_encoder:
-            self._right_encoder_count = 0
-        self._update_smartdashboard_sensors()
-        return self._right_encoder_count
-
-    def reset_encoder_value(self):
-        self.reset_left_encoder_value()
-        self.reset_right_encoder_value()
 
     def get_gyro_angle(self):
         if self._gyro:
@@ -161,9 +103,6 @@ class Drivetrain(Subsystem):
             self._sonar_distance = self._sonar.getDistance()
         return self._sonar_distance
 
-    def is_encoder_enabled(self):
-        return self._left_encoder is not None or self._right_encoder is not None
-
     def is_gyro_enabled(self):
         return self._gyro is not None
 
@@ -176,8 +115,6 @@ class Drivetrain(Subsystem):
         self._robot_drive.tankDrive(left, right, False)
         self._update_smartdashboard_tank_drive(left_speed, right_speed)
         self.get_gyro_angle()
-        self.get_left_encoder_value()
-        self.get_right_encoder_value()
         self.get_sonar_distance()
         self._update_smartdashboard_sensors()
 
@@ -187,8 +124,6 @@ class Drivetrain(Subsystem):
             self._robot_drive.arcadeDrive(linear_distance, determined_turn_angle, squared_inputs)
         self._update_smartdashboard_arcade_drive(linear_distance, determined_turn_angle)
         self.get_gyro_angle()
-        self.get_left_encoder_value()
-        self.get_right_encoder_value()
         self.get_sonar_distance()
         self._update_smartdashboard_sensors()
 
@@ -207,8 +142,6 @@ class Drivetrain(Subsystem):
         SmartDashboard.putNumber("Drivetrain Turn Speed", turn)
 
     def _update_smartdashboard_sensors(self):
-        SmartDashboard.putNumber("Drivetrain Left Encoder", self._left_encoder_count)
-        SmartDashboard.putNumber("Drivetrain Right Encoder", self._right_encoder_count)
         SmartDashboard.putNumber("Drivetrain Sonar Distance", self._sonar_distance)
         SmartDashboard.putNumber("Gyro Angle", self._gyro_angle)
         line_state = self.get_line_follow_sate()
@@ -223,28 +156,6 @@ class Drivetrain(Subsystem):
         self._max_speed = self._config.getfloat(self.GENERAL_SECTION, Drivetrain.MAX_SPEED_KEY)
         self._modifier_scaling = self._config.getfloat(self.GENERAL_SECTION, Drivetrain.MODIFIER_SCALING_KEY)
         self._dpad_scaling = self._config.getfloat(self.GENERAL_SECTION, Drivetrain.DPAD_SCALING_KEY)
-
-        # if not self._config.getboolean(self.GENERAL_SECTION, "ARCADE_DRIVE_ROTATION_INVERTED"):
-        #     self._arcade_rotation_modifier = 1
-
-        if self._config.getboolean(Drivetrain.LEFT_ENCODER_SECTION, Drivetrain.ENABLED_KEY):
-            self._left_encoder_a_channel = self._config.getint(self.LEFT_ENCODER_SECTION, Drivetrain.A_CHANNEL)
-            self._left_encoder_b_channel = self._config.getint(self.LEFT_ENCODER_SECTION, Drivetrain.B_CHANNEL)
-            self._left_encoder_reversed = self._config.getboolean(self.LEFT_ENCODER_SECTION, Drivetrain.REVERSED_KEY)
-            self._left_encoder_type = self._config.getint(self.LEFT_ENCODER_SECTION, Drivetrain.TYPE_KEY)
-            if self._left_encoder_a_channel and self._left_encoder_b_channel and self._left_encoder_type:
-                self._left_encoder = Encoder(self._left_encoder_a_channel, self._left_encoder_b_channel,
-                                             self._left_encoder_reversed, self._left_encoder_type)
-
-        if self._config.getboolean(Drivetrain.RIGHT_ENCODER_SECTION, Drivetrain.ENABLED_KEY):
-            self._right_encoder_a_channel = self._config.getint(self.RIGHT_ENCODER_SECTION, Drivetrain.A_CHANNEL)
-            self._right_encoder_b_channel = self._config.getint(self.RIGHT_ENCODER_SECTION, Drivetrain.B_CHANNEL)
-            self._right_encoder_reversed = self._config.getboolean(self.RIGHT_ENCODER_SECTION,
-                                                                   Drivetrain.REVERSED_KEY)
-            self._right_encoder_type = self._config.getint(self.RIGHT_ENCODER_SECTION, Drivetrain.TYPE_KEY)
-            if self._right_encoder_a_channel and self._right_encoder_b_channel and self._right_encoder_type:
-                self._right_encoder = Encoder(self._right_encoder_a_channel, self._right_encoder_b_channel,
-                                              self._right_encoder_reversed, self._right_encoder_type)
 
         if self._config.getboolean(Drivetrain.GYRO_SECTION, Drivetrain.ENABLED_KEY):
             gyro_channel = self._config.getint(self.GYRO_SECTION, Drivetrain.CHANNEL_KEY)
