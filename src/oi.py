@@ -12,10 +12,10 @@ class JoystickAxis(object):
     """Enumerates joystick axis."""
     LEFTX = 0
     LEFTY = 1
-    RIGHTX = 2
-    RIGHTY = 3
-    DPADX = 5
-    DPADY = 6
+    RIGHTX = 4
+    RIGHTY = 5
+    DPADX = 11
+    DPADY = 12
 
 
 class JoystickButtons(object):
