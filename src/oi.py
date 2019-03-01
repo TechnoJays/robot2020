@@ -67,9 +67,9 @@ class OI:
         panel_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
         panel_button.whileHeld(ReleasePanel(self.robot))
         # Wheel risers
-        raise_front_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.RIGHTTRIGGER)
+        raise_front_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.RIGHTBUMPER)
         raise_front_wheels_button.whileHeld(RaiseFrontWheels(self.robot))
-        raise_rear_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.LEFTTRIGGER)
+        raise_rear_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.LEFTBUMPER)
         raise_rear_wheels_button.whileHeld(RaiseRearWheels(self.robot))
         # Arm controls
         #extend_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.X)
