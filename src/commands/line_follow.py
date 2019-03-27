@@ -20,7 +20,7 @@ class LineFollow(Command):
         """Called repeatedly when this Command is schedule to run"""
         # Get line sensors state
         # NOTE: Assuming 5 sensors for this robot (can be 3)
-        line_sensors = self.robot.drivetrain.get_line_follow_sate()
+        line_sensors = self.robot.drivetrain.get_line_follow_state()
 
         # Check if any sensors detect a line and drive accordingly
         # (far_left, left_line, center_line, right_line, far_right)
