@@ -79,12 +79,14 @@ class Drivetrain(Subsystem):
             return (self._far_left_line_follow.get(),
                     self._left_line_follow.get(),
                     self._center_line_follow.get(),
-                    self._right_line_follow,
-                    self._far_right_line_follow)
-        else:
+                    self._right_line_follow.get(),
+                    self._far_right_line_follow.get())
+        elif self._left_line_follow and self._center_line_follow and self._right_line_follow:
             return (self._left_line_follow.get(),
                     self._center_line_follow.get(),
-                    self._right_line_follow)
+                    self._right_line_follow.get())
+        else:
+            return ()
 
     def get_gyro_angle(self):
         if self._gyro:

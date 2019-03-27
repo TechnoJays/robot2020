@@ -6,6 +6,7 @@ from commands.extend_arm_to_position import ExtendArmToPosition
 from commands.retract_arm_to_position import RetractArmToPosition
 from commands.raise_front_wheels import RaiseFrontWheels
 from commands.raise_rear_wheels import RaiseRearWheels
+from commands.line_follow import LineFollow
 
 
 class JoystickAxis(object):
@@ -71,6 +72,10 @@ class OI:
         raise_front_wheels_button.whileHeld(RaiseFrontWheels(self.robot))
         raise_rear_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.LEFTBUMPER)
         raise_rear_wheels_button.whileHeld(RaiseRearWheels(self.robot))
+        # Line following
+        line_following_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.X)
+        line_following_button.whileHeld(LineFollow(self.robot, 0.4))
+
         # Arm controls
         #extend_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.X)
         #extend_arm_button.whenPressed(ExtendArmToPosition(self.robot, 1, 1)) # need to get an encoder position
