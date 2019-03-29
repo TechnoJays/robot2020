@@ -74,17 +74,19 @@ class Drivetrain(Subsystem):
         self.setDefaultCommand(TankDrive(self._robot, 'TankDrive', modifier_scaling=self._modifier_scaling,
                                          dpad_scaling=self._dpad_scaling))
 
-    def get_line_follow_sate(self):
+    def get_line_follow_state(self):
         if self._far_left_line_follow and self._far_right_line_follow:
             return (self._far_left_line_follow.get(),
                     self._left_line_follow.get(),
                     self._center_line_follow.get(),
-                    self._right_line_follow,
-                    self._far_right_line_follow)
-        else:
+                    self._right_line_follow.get(),
+                    self._far_right_line_follow.get())
+        elif self._left_line_follow and self._center_line_follow and self._right_line_follow:
             return (self._left_line_follow.get(),
                     self._center_line_follow.get(),
-                    self._right_line_follow)
+                    self._right_line_follow.get())
+        else:
+            return ()
 
     def get_gyro_angle(self):
         if self._gyro:
@@ -144,7 +146,7 @@ class Drivetrain(Subsystem):
     def _update_smartdashboard_sensors(self):
         SmartDashboard.putNumber("Drivetrain Sonar Distance", self._sonar_distance)
         SmartDashboard.putNumber("Gyro Angle", self._gyro_angle)
-        line_state = self.get_line_follow_sate()
+        line_state = self.get_line_follow_state()
         if len(line_state) > 3:
             SmartDashboard.putBoolean("Far Left Line", line_state[0])
             SmartDashboard.putBoolean("Far Right Line", line_state[4])
