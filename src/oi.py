@@ -74,7 +74,7 @@ class OI:
         raise_rear_wheels_button.whileHeld(RaiseRearWheels(self.robot))
         # Line following
         line_following_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.X)
-        line_following_button.whileHeld(LineFollow(self.robot, 0.4))
+        line_following_button.whileHeld(LineFollow(self.robot, -0.2))
 
         # Arm controls
         #extend_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.X)
