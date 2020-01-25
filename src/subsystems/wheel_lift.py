@@ -1,6 +1,6 @@
 import configparser
-from wpilib.command.subsystem import Subsystem
-from wpilib.solenoid import Solenoid
+from wpilib.command import Subsystem
+from wpilib import Solenoid
 from commands.do_nothing_lift import DoNothingWheelLift
 
 

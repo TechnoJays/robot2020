@@ -1,6 +1,6 @@
 import configparser
 from wpilib import Joystick
-from wpilib.buttons.joystickbutton import JoystickButton
+from wpilib.buttons import JoystickButton
 from commands.release_panel import ReleasePanel
 from commands.extend_arm_to_position import ExtendArmToPosition
 from commands.retract_arm_to_position import RetractArmToPosition
