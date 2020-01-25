@@ -1,8 +1,8 @@
 import configparser
-from wpilib.command.subsystem import Subsystem
-from wpilib.pwmtalonsrx import PWMTalonSRX
-from wpilib.smartdashboard import SmartDashboard
-from wpilib.analogpotentiometer import AnalogPotentiometer
+from wpilib.command import Subsystem
+from wpilib import PWMTalonSRX
+from wpilib import SmartDashboard
+from wpilib import AnalogPotentiometer
 from commands.move_arm import MoveArm
 
 

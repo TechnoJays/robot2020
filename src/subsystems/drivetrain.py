@@ -1,11 +1,11 @@
 import configparser
 
 from wpilib import DigitalInput
-from wpilib.command.subsystem import Subsystem
+from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
-from wpilib.pwmtalonsrx import PWMTalonSRX
-from wpilib.adxrs450_gyro import ADXRS450_Gyro
-from wpilib.smartdashboard import SmartDashboard
+from wpilib import PWMTalonSRX
+from wpilib import ADXRS450_Gyro
+from wpilib import SmartDashboard
 from util.sonar import MaxSonar
 from commands.tank_drive import TankDrive
 

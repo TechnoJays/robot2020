@@ -1,4 +1,4 @@
-from wpilib.command.command import Command
+from wpilib.command import Command
 from util.stopwatch import Stopwatch
 
 

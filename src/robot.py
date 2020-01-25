@@ -1,5 +1,6 @@
-from wpilib import command
 import wpilib
+from wpilib import command
+
 
 from commands.do_nothing import DoNothing
 from oi import OI
