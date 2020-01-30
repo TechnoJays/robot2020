@@ -17,7 +17,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='team94_robot_2019',  # Required
+    name='team94_robot_2020',  # Required
     version='0.0.1',  # Required
     maintainer='Aaron DeGrow',
     maintainer_email='ninetyfouriors@gmail.com',
@@ -35,7 +35,10 @@ setup(
     ],
     keywords='first frc team94 robotPy',  # Optional
     packages=find_packages(exclude=["tests/*"]),  # Required
-    install_requires=['pyfrc'],  # Optional
+    install_requires=[
+        'pyfrc',
+        'robotpy-commands-v1'
+    ],  # Optional
     extras_require={  # Optional
         'test': ['black', 'pipenv', 'tox', 'tox-pipenv', 'coverage'],
     }

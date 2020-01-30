@@ -2,9 +2,9 @@ from typing import Union
 
 import hal
 
-from wpilib.sendablebase import SendableBase
-from wpilib.sendablebuilder import SendableBuilder
-from wpilib.analoginput import AnalogInput
+from wpilib import SendableBase
+from wpilib import SendableBuilder
+from wpilib import AnalogInput
 
 __all__ = ["MaxSonar"]
 
