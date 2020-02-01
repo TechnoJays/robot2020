@@ -1,10 +1,10 @@
 os: osx
 osx_image: xcode11.3
 sudo: false
-language: python
-python:
-  - "3.7"
 install:
+- brew install pyenv
+- pyenv install 3.8.1
+- pyenv local 3.8.1
 - pip install tox-travis
 - pip install coveralls
 script:
