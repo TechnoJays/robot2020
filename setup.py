@@ -38,7 +38,6 @@ setup(
     install_requires=[
         'pyfrc',
         'robotpy-commands-v1',
-        'robotpy-rev',
         'robotpy-rev-color'
     ],  # Optional
     extras_require={  # Optional
