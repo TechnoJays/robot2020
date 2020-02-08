@@ -1,12 +1,6 @@
 import configparser
 from wpilib import Joystick
 from wpilib.buttons import JoystickButton
-from commands.release_panel import ReleasePanel
-from commands.extend_arm_to_position import ExtendArmToPosition
-from commands.retract_arm_to_position import RetractArmToPosition
-from commands.raise_front_wheels import RaiseFrontWheels
-from commands.raise_rear_wheels import RaiseRearWheels
-from commands.line_follow import LineFollow
 
 
 class JoystickAxis(object):
@@ -64,23 +58,7 @@ class OI:
         self._create_smartdashboard_buttons()
 
     def setup_button_bindings(self):
-        # Panel grabber
-        panel_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.A)
-        panel_button.whileHeld(ReleasePanel(self.robot))
-        # Wheel risers
-        raise_front_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.RIGHTBUMPER)
-        raise_front_wheels_button.whileHeld(RaiseFrontWheels(self.robot))
-        raise_rear_wheels_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.LEFTBUMPER)
-        raise_rear_wheels_button.whileHeld(RaiseRearWheels(self.robot))
-        # Line following
-        line_following_button = JoystickButton(self._controllers[UserController.DRIVER], JoystickButtons.X)
-        line_following_button.whileHeld(LineFollow(self.robot, -0.2))
-
-        # Arm controls
-        #extend_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.X)
-        #extend_arm_button.whenPressed(ExtendArmToPosition(self.robot, 1, 1)) # need to get an encoder position
-        #retract_arm_button = JoystickButton(self._controllers[UserController.SCORING], JoystickButtons.Y)
-        #retract_arm_button.whenPressed(RetractArmToPosition(self.robot, 1, 1)) # need encoder position
+        pass
 
     def get_axis(self, user, axis):
         """Read axis value for specified controller/axis.
