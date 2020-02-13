@@ -1,6 +1,5 @@
 import configparser
 from wpilib import Joystick
-from wpilib.buttons import JoystickButton
 
 
 class JoystickAxis(object):

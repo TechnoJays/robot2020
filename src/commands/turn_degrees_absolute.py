@@ -24,7 +24,7 @@ class TurnDegreesAbsolute(Command):
         """Called repeatedly when this Command is scheduled to run"""
         current = self.robot.drivetrain.get_gyro_angle()
         degrees_left = self._target_degrees - current
-        direction = self._determine_direction(degrees_left)
+        direction = TurnDegreesAbsolute._determine_direction(degrees_left)
         turn_speed = self._speed * direction
         # Set drivetrain using speed and direction
         self.robot.drivetrain.arcade_drive(0.0, turn_speed, False)
@@ -45,7 +45,8 @@ class TurnDegreesAbsolute(Command):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""
         self.end()
 
-    def _determine_direction(self, degrees_left: float) -> float:
+    @staticmethod
+    def _determine_direction(degrees_left: float) -> float:
         """Based on the degrees left, returns -1 for turn right, returns 1 for turn left"""
         if degrees_left >= 0:
             return 1.0
