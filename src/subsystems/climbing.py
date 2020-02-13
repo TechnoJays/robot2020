@@ -5,6 +5,8 @@ from wpilib import PWMTalonSRX
 from wpilib import SmartDashboard
 from wpilib.command import Subsystem
 
+from commands.move_winch import MoveWinch
+
 
 class Climbing(Subsystem):
     # Config file section names
@@ -39,9 +41,7 @@ class Climbing(Subsystem):
             self._limit_switch = DigitalInput(self._config.getint(Climbing.LIMIT_SWITCH_SECTION, Climbing.CHANNEL_KEY))
 
     def initDefaultCommand(self):
-        pass
-    #        self.setDefaultCommand(TankDrive(self._robot, 'TankDrive', modifier_scaling=self._modifier_scaling,
-    #                                         dpad_scaling=self._dpad_scaling))
+        self.setDefaultCommand(MoveWinch(self._robot, 'MoveWinch'))
 
     def is_retracted(self) -> bool:
         if self._limit_switch is not None:
