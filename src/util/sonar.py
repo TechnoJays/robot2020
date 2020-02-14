@@ -28,7 +28,7 @@ class MaxSonar(SendableBase):
             self.allocatedChannel = False
             self.analogChannel = channel
         hal.report(
-            hal.UsageReporting.kResourceType_AnalogChannel,
+            hal.tResourceType.kResourceType_AnalogChannel,
             self.analogChannel.getChannel(),
         )
         self.setName("MaxSonar", self.analogChannel.getChannel())
@@ -53,7 +53,7 @@ class MaxSonar(SendableBase):
         self._scaling_factor = factor
         self._calculate_scaling()
 
-    def getDistance(self) -> float:
+    def get_distance(self) -> float:
         """Return the distance in centimeters.
 
         :returns: distance in cm

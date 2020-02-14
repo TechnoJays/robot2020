@@ -9,6 +9,7 @@ from wpilib import SmartDashboard
 from util.sonar import MaxSonar
 from commands.tank_drive import TankDrive
 
+
 class Drivetrain(Subsystem):
     # Config file section names
     GENERAL_SECTION = "DrivetrainGeneral"
@@ -65,9 +66,9 @@ class Drivetrain(Subsystem):
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
         self._init_components()
-        self._update_smartdashboard_sensors()
-        self._update_smartdashboard_tank_drive(0.0, 0.0)
-        self._update_smartdashboard_arcade_drive(0.0, 0.0)
+        self._update_smartdashboard_sensors(self._sonar_distance, self._gyro_angle, self.get_line_follow_state())
+        Drivetrain._update_smartdashboard_tank_drive(0.0, 0.0)
+        Drivetrain._update_smartdashboard_arcade_drive(0.0, 0.0)
         super().__init__(name=name)
 
     def initDefaultCommand(self):
@@ -97,12 +98,12 @@ class Drivetrain(Subsystem):
         if self._gyro:
             self._gyro.reset()
             self._gyro_angle = self._gyro.getAngle()
-        self._update_smartdashboard_sensors()
+        self._update_smartdashboard_sensors(self._sonar_distance, self._gyro_angle, self.get_line_follow_state())
         return self._gyro_angle
 
     def get_sonar_distance(self) -> float:
         if self._sonar:
-            self._sonar_distance = self._sonar.getDistance()
+            self._sonar_distance = self._sonar.get_distance()
         return self._sonar_distance
 
     def is_gyro_enabled(self):
@@ -115,19 +116,19 @@ class Drivetrain(Subsystem):
         left = left_speed * self._max_speed
         right = right_speed * self._max_speed
         self._robot_drive.tankDrive(left, right, False)
-        self._update_smartdashboard_tank_drive(left_speed, right_speed)
+        Drivetrain._update_smartdashboard_tank_drive(left_speed, right_speed)
         self.get_gyro_angle()
         self.get_sonar_distance()
-        self._update_smartdashboard_sensors()
+        self._update_smartdashboard_sensors(self._sonar_distance, self._gyro_angle, self.get_line_follow_state())
 
     def arcade_drive(self, linear_distance, turn_angle, squared_inputs=True):
         determined_turn_angle = self._modify_turn_angle(turn_angle)
         if self._robot_drive:
             self._robot_drive.arcadeDrive(linear_distance, determined_turn_angle, squared_inputs)
-        self._update_smartdashboard_arcade_drive(linear_distance, determined_turn_angle)
+        Drivetrain._update_smartdashboard_arcade_drive(linear_distance, determined_turn_angle)
         self.get_gyro_angle()
         self.get_sonar_distance()
-        self._update_smartdashboard_sensors()
+        self._update_smartdashboard_sensors(self._sonar_distance, self._gyro_angle, self.get_line_follow_state())
 
     def _modify_turn_angle(self, turn_angle: float) -> float:
         """Method to support switch from pyfrc RobotDrive to pyfrc DifferentialDrive
@@ -135,18 +136,20 @@ class Drivetrain(Subsystem):
         """
         return self._arcade_rotation_modifier * turn_angle
 
-    def _update_smartdashboard_tank_drive(self, left, right):
+    @staticmethod
+    def _update_smartdashboard_tank_drive(left, right):
         SmartDashboard.putNumber("Drivetrain Left Speed", left)
         SmartDashboard.putNumber("Drivetrain Right Speed", right)
 
-    def _update_smartdashboard_arcade_drive(self, linear, turn):
+    @staticmethod
+    def _update_smartdashboard_arcade_drive(linear, turn):
         SmartDashboard.putNumber("Drivetrain Linear Speed", linear)
         SmartDashboard.putNumber("Drivetrain Turn Speed", turn)
 
-    def _update_smartdashboard_sensors(self):
-        SmartDashboard.putNumber("Drivetrain Sonar Distance", self._sonar_distance)
-        SmartDashboard.putNumber("Gyro Angle", self._gyro_angle)
-        line_state = self.get_line_follow_state()
+    @staticmethod
+    def _update_smartdashboard_sensors(sonar_distance, gyro_angle, line_state):
+        SmartDashboard.putNumber("Drivetrain Sonar Distance", sonar_distance)
+        SmartDashboard.putNumber("Gyro Angle", gyro_angle)
         if len(line_state) > 3:
             SmartDashboard.putBoolean("Far Left Line", line_state[0])
             SmartDashboard.putBoolean("Far Right Line", line_state[4])
