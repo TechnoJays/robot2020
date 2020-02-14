@@ -1,4 +1,5 @@
 import time
+from typing import Optional
 
 
 class Stopwatch(object):
@@ -7,11 +8,11 @@ class Stopwatch(object):
     This class provides simple time keeping functionality like a stopwatch.
 
     """
-    _running = False
-    _start = None
-    _end = None
-    _secs = None
-    _msecs = None
+    _running: bool = False
+    _start: Optional[float] = None
+    _end: Optional[float] = None
+    _secs: Optional[float] = None
+    _msecs: Optional[float] = None
 
     def __init__(self):
         """Create and initialize a Stopwatch."""
@@ -54,7 +55,7 @@ class Stopwatch(object):
             self._end = time.time()
             self._running = False
 
-    def elapsed_time_in_secs(self):
+    def elapsed_time_in_secs(self) -> Optional[float]:
         """Return elapsed time in seconds.
 
         Calculate the time difference between the start and end times in
@@ -68,7 +69,7 @@ class Stopwatch(object):
             self._secs = self._end - self._start
         return self._secs
 
-    def elapsed_time_in_msecs(self):
+    def elapsed_time_in_msecs(self) -> Optional[float]:
         """Return elapsed time in milliseconds.
 
         Calculate the time difference between the start and end times in
