@@ -1,8 +1,11 @@
 import configparser
+from enum import Enum
+from typing import List
+
 from wpilib import Joystick
 
 
-class JoystickAxis(object):
+class JoystickAxis(Enum):
     """Enumerates joystick axis."""
     LEFTX = 0
     LEFTY = 1
@@ -12,7 +15,7 @@ class JoystickAxis(object):
     DPADY = 12
 
 
-class JoystickButtons(object):
+class JoystickButtons(Enum):
     """Enumerates joystick buttons."""
     X = 1
     A = 2
@@ -26,7 +29,7 @@ class JoystickButtons(object):
     START = 10
 
 
-class UserController(object):
+class UserController(Enum):
     """Enumerates the controllers."""
     DRIVER = 0
     SCORING = 1
@@ -37,13 +40,33 @@ class OI:
     This class is the glue that binds the controls on the physical operator
     interface to the commands and command groups that allow control of the robot.
     """
-    _config = None
-    _command_config = None
-    _controllers = []
+    AXIS_BINDING_SECTION = "AxisBindings"
+    BUTTON_BINDING_SECTION = "ButtonBindings"
+    JOY_CONFIG_SECTION = "JoyConfig"
+    DEAD_ZONE_KEY = "DEAD_ZONE"
+    PORT_KEY = "PORT"
+    LEFT_X_KEY = "LEFTX"
+    LEFT_Y_KEY = "LEFTY"
+    RIGHT_X_KEY = "RIGHTX"
+    RIGHT_Y_KEY = "RIGHTY"
+    DPAD_X_KEY = "DPADX"
+    DPAD_Y_KEY = "DPADY"
+    X_KEY = "X"
+    A_KEY = "A"
+    B_KEY = "B"
+    Y_KEY = "Y"
+    LEFT_BUMPER_KEY = "LEFTBUMPER"
+    RIGHT_BUMPER_KEY = "RIGHTBUMPER"
+    LEFT_TRIGGER_KEY = "LEFTTRIGGER"
+    RIGHT_TRIGGER_KEY = "RIGHTTRIGGER"
+    BACK_KEY = "BACK"
+    START_KEY = "START"
+
+    _config: configparser.ConfigParser = None
+    _controllers: List[UserController] = []
+    _dead_zones: List[float] = []
     _auto_program_chooser = None
     _starting_chooser = None
-
-    FULL_SPEED_AHEAD: float = 1.0
 
     def __init__(self, robot, configfile='/home/lvuser/py/configs/joysticks.ini'):
         self.robot = robot
@@ -53,13 +76,49 @@ class OI:
 
         for i in range(2):
             self._controllers.append(self._init_joystick(i))
+            self._dead_zones.append(self._init_dead_zone(i))
 
         self._create_smartdashboard_buttons()
+
+    def _init_joystick(self, driver: int) -> Joystick:
+        config_section = OI.JOY_CONFIG_SECTION + str(driver)
+        return Joystick(self._config.getint(config_section, OI.PORT_KEY))
+
+    def _init_dead_zone(self, driver: int) -> float:
+        config_section = OI.JOY_CONFIG_SECTION + str(driver)
+        return self._config.getfloat(config_section, OI.DEAD_ZONE_KEY)
+
+    def _init_joystick_binding(self):
+        JoystickAxis.LEFTX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.LEFT_X_KEY)
+        JoystickAxis.LEFTY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.LEFT_Y_KEY)
+        JoystickAxis.RIGHTX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.RIGHT_X_KEY)
+        JoystickAxis.RIGHTY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.RIGHT_Y_KEY)
+        JoystickAxis.DPADX = self._config.getint(OI.AXIS_BINDING_SECTION, OI.DPAD_X_KEY)
+        JoystickAxis.DPADY = self._config.getint(OI.AXIS_BINDING_SECTION, OI.DPAD_Y_KEY)
+        JoystickButtons.X = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.X_KEY)
+        JoystickButtons.A = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.A_KEY)
+        JoystickButtons.B = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.B_KEY)
+        JoystickButtons.Y = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.Y_KEY)
+        JoystickButtons.LEFTBUMPER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.LEFT_BUMPER_KEY)
+        JoystickButtons.RIGHTBUMPER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.RIGHT_BUMPER_KEY)
+        JoystickButtons.LEFTTRIGGER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.LEFT_TRIGGER_KEY)
+        JoystickButtons.RIGHTTRIGGER = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.RIGHT_TRIGGER_KEY)
+        JoystickButtons.BACK = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.BACK_KEY)
+        JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
+
+    def _create_smartdashboard_buttons(self):
+        pass
 
     def setup_button_bindings(self):
         pass
 
-    def get_axis(self, user, axis):
+    def get_auto_choice(self) -> int:
+        return self._auto_program_chooser.getSelected()
+
+    def get_position(self) -> int:
+        return self._starting_chooser.getSelected()
+
+    def get_axis(self, user: UserController, axis: JoystickAxis) -> float:
         """Read axis value for specified controller/axis.
 
         Args:
@@ -69,8 +128,8 @@ class OI:
         Return:
             Current position for the specified axis. (Range [-1.0, 1.0])
         """
-        controller = self._controllers[user]
-        value = 0.0
+        controller = self._controllers[user.value]
+        value: float = 0.0
         if axis == JoystickAxis.DPADX:
             value = controller.getPOV()
             if value == 90:
@@ -88,49 +147,10 @@ class OI:
             else:
                 value = 0.0
         else:
-            config_section = "JoyConfig" + str(user)
-            dead_zone = self._config.getfloat(config_section, "DEAD_ZONE")
             value = controller.getRawAxis(axis)
-            if abs(value) < dead_zone:
+            if abs(value) < self._dead_zones[user.value]:
                 value = 0.0
-
         return value
 
-    def get_button_state(self, user, button):
-        return self._controllers[user].getRawButton(button)
-
-    def _create_smartdashboard_buttons(self):
-        pass
-
-    def get_auto_choice(self):
-        return self._auto_program_chooser.getSelected()
-
-    def get_position(self):
-        value = self._starting_chooser.getSelected()
-        return value
-
-    def _init_joystick(self, driver):
-        config_section = "JoyConfig" + str(driver)
-        stick = Joystick(self._config.getint(config_section, "PORT"))
-        return stick
-
-    def _init_joystick_binding(self):
-        axis_binding_section = "AxisBindings"
-        JoystickAxis.LEFTX = self._config.getint(axis_binding_section, "LEFTX")
-        JoystickAxis.LEFTY = self._config.getint(axis_binding_section, "LEFTY")
-        JoystickAxis.RIGHTX = self._config.getint(axis_binding_section, "RIGHTX")
-        JoystickAxis.RIGHTY = self._config.getint(axis_binding_section, "RIGHTY")
-        JoystickAxis.DPADX = self._config.getint(axis_binding_section, "DPADX")
-        JoystickAxis.DPADY = self._config.getint(axis_binding_section, "DPADY")
-
-        button_binding_section = "ButtonBindings"
-        JoystickButtons.X = self._config.getint(button_binding_section, "X")
-        JoystickButtons.A = self._config.getint(button_binding_section, "A")
-        JoystickButtons.B = self._config.getint(button_binding_section, "B")
-        JoystickButtons.Y = self._config.getint(button_binding_section, "Y")
-        JoystickButtons.LEFTBUMPER = self._config.getint(button_binding_section, "LEFTBUMPER")
-        JoystickButtons.RIGHTBUMPER = self._config.getint(button_binding_section, "RIGHTBUMPER")
-        JoystickButtons.LEFTTRIGGER = self._config.getint(button_binding_section, "LEFTTRIGGER")
-        JoystickButtons.RIGHTTRIGGER = self._config.getint(button_binding_section, "RIGHTTRIGGER")
-        JoystickButtons.BACK = self._config.getint(button_binding_section, "BACK")
-        JoystickButtons.START = self._config.getint(button_binding_section, "START")
+    def get_button_state(self, user: UserController, button: JoystickButtons) -> bool:
+        return self._controllers[user.value].getRawButton(button)

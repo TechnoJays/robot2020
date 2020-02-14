@@ -1,8 +1,9 @@
 import pytest
 from util.stopwatch import Stopwatch
 
+
 @pytest.fixture(scope="function")
-def stopwatch_default(robot):
+def stopwatch_default():
     return Stopwatch()
 
 
