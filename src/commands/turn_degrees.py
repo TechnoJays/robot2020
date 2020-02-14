@@ -3,12 +3,12 @@ import math
 
 
 class TurnDegrees(Command):
-    _speed = None
-    _degree_threshold = None
-    _degrees_change = None
-    _target_degrees = None
+    _speed: float = None
+    _degree_threshold: float = None
+    _degrees_change: float = None
+    _target_degrees: float = None
 
-    def __init__(self, robot, degrees_change, speed, threshold, name=None, timeout=15):
+    def __init__(self, robot, degrees_change: float, speed: float, threshold: float, name=None, timeout=15):
         """Constructor"""
         super().__init__(name, timeout)
         self.robot = robot
@@ -19,19 +19,13 @@ class TurnDegrees(Command):
 
     def initialize(self):
         """Called before the Command is run for the first time."""
-        # Get initial position
-        current = self.robot.drivetrain.get_gyro_angle()
-        # Calculate and store target
-        self._target_degrees = current + self._degrees_change
+        self._target_degrees = self.robot.drivetrain.get_gyro_angle() + self._degrees_change
         return Command.initialize(self)
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        current = self.robot.drivetrain.get_gyro_angle()
-        degrees_left = self._target_degrees - current
-        direction = TurnDegrees._determine_direction(degrees_left)
-        turn_speed = self._speed * direction
-        # Set drivetrain using speed and direction
+        degrees_left = self._target_degrees - self.robot.drivetrain.get_gyro_angle()
+        turn_speed = self._speed * TurnDegrees._determine_direction(degrees_left)
         self.robot.drivetrain.arcade_drive(0.0, turn_speed, False)
         return Command.execute(self)
 
@@ -43,7 +37,6 @@ class TurnDegrees(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        # Stop driving
         self.robot.drivetrain.arcade_drive(0.0, 0.0)
 
     def interrupted(self):
@@ -54,7 +47,4 @@ class TurnDegrees(Command):
     def _determine_direction(degrees_left: float) -> float:
         """Based on the degrees left, determines the direction of the degrees to turn
         """
-        if degrees_left >= 0:
-            return 1.0
-        else:
-            return -1.0
+        return 1.0 if degrees_left >= 0 else -1.0

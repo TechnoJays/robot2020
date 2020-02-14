@@ -3,11 +3,11 @@ import math
 
 
 class TurnDegreesAbsolute(Command):
-    _speed = None
-    _degree_threshold = None
-    _target_degrees = None
+    _speed: float = None
+    _degree_threshold: float = None
+    _target_degrees: float = None
 
-    def __init__(self, robot, degrees_target, speed, threshold, name=None, timeout=15):
+    def __init__(self, robot, degrees_target: float, speed: float, threshold: float, name=None, timeout=15):
         """Constructor"""
         super().__init__(name, timeout)
         self.robot = robot
@@ -22,11 +22,8 @@ class TurnDegreesAbsolute(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        current = self.robot.drivetrain.get_gyro_angle()
-        degrees_left = self._target_degrees - current
-        direction = TurnDegreesAbsolute._determine_direction(degrees_left)
-        turn_speed = self._speed * direction
-        # Set drivetrain using speed and direction
+        degrees_left = self._target_degrees - self.robot.drivetrain.get_gyro_angle()
+        turn_speed = self._speed * TurnDegreesAbsolute._determine_direction(degrees_left)
         self.robot.drivetrain.arcade_drive(0.0, turn_speed, False)
         return Command.execute(self)
 
@@ -38,7 +35,6 @@ class TurnDegreesAbsolute(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        # Stop driving
         self.robot.drivetrain.arcade_drive(0.0, 0.0)
 
     def interrupted(self):
@@ -48,7 +44,4 @@ class TurnDegreesAbsolute(Command):
     @staticmethod
     def _determine_direction(degrees_left: float) -> float:
         """Based on the degrees left, returns -1 for turn right, returns 1 for turn left"""
-        if degrees_left >= 0:
-            return 1.0
-        else:
-            return -1.0
+        return 1.0 if degrees_left >= 0 else -1.0
