@@ -49,7 +49,7 @@ class Climbing(Subsystem):
         else:
             return False
 
-    def _update_smartdashboard_sensors(self, speed: float):
+    def _update_smartdashboard_sensors(self, speed: float = 0.0):
         SmartDashboard.putNumber("Climbing Speed", speed)
         if self._limit_switch is not None:
             SmartDashboard.putBoolean("Climbing Switch", self._limit_switch.get())
