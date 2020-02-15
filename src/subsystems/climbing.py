@@ -24,13 +24,13 @@ class Climbing(Subsystem):
     _motor = None
     _limit_switch = None
 
-    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name: str ='Winch', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
         self._init_components()
         self._update_smartdashboard_sensors()
-        super().__init__(name=name)
+        super().__init__(name)
 
     def _init_components(self):
         self._max_speed = self._config.getfloat(Climbing.GENERAL_SECTION, Climbing.MAX_SPEED_KEY)
@@ -64,4 +64,4 @@ class Climbing(Subsystem):
             else:
                 adjusted_speed = 0.0
             self._motor.set(adjusted_speed)
-        self._update_smartdashboard(adjusted_speed)
+        self._update_smartdashboard_sensors(adjusted_speed)
