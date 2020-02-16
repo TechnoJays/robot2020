@@ -109,3 +109,7 @@ ENV/
 # PyCharm
 .idea/
 
+# Robotpy Cache
+robotpy
+opkg_cache
+pyfrc
