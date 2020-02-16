@@ -22,7 +22,9 @@ class Climbing(Subsystem):
     _robot = None
     _config = None
     _motor = None
+
     _limit_switch = None
+    _limit_switch_inverted = False
 
     def __init__(self, robot, name: str ='Winch', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
@@ -39,27 +41,35 @@ class Climbing(Subsystem):
             self._motor.setInverted(self._config.getboolean(Climbing.GENERAL_SECTION, Climbing.INVERTED_KEY))
         if self._config.getboolean(Climbing.LIMIT_SWITCH_SECTION, Climbing.ENABLED_KEY):
             self._limit_switch = DigitalInput(self._config.getint(Climbing.LIMIT_SWITCH_SECTION, Climbing.CHANNEL_KEY))
+            self._limit_switch_inverted = self._config.getboolean(Climbing.LIMIT_SWITCH_SECTION, Climbing.INVERTED_KEY)
 
     def initDefaultCommand(self):
         self.setDefaultCommand(MoveWinch(self._robot, 'MoveWinch'))
 
     def is_retracted(self) -> bool:
+        if (not self._limit_switch_inverted):
+            return self._limit_value()
+        else:
+            return not self._limit_value()
+
+    def _limit_value(self) -> bool:
         if self._limit_switch is not None:
             return self._limit_switch.get()
         else:
             return False
 
     def _update_smartdashboard_sensors(self, speed: float = 0.0):
-        SmartDashboard.putNumber("Climbing Speed", speed)
+        SmartDashboard.putNumber("Winch Speed", speed)
         if self._limit_switch is not None:
-            SmartDashboard.putBoolean("Climbing Switch", self._limit_switch.get())
+            SmartDashboard.putBoolean("Winch Retracted", self.is_retracted())
+            SmartDashboard.putBoolean("Winch Limit Switch State", self._limit_value())
 
     def move_winch(self, speed: float):
         adjusted_speed = 0.0
         if self._motor:
             if speed < 0.0:
                 adjusted_speed = speed * self._max_speed
-            elif speed > 0.0 and not self.is_retracted():
+            elif (speed > 0.0) and (not self.is_retracted()):
                 adjusted_speed = speed * self._max_speed
             else:
                 adjusted_speed = 0.0
