@@ -22,15 +22,17 @@ class Climbing(Subsystem):
     _robot = None
     _config = None
     _motor = None
-    _limit_switch = None
 
-    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    _limit_switch = None
+    _limit_switch_inverted = False
+
+    def __init__(self, robot, name: str ='Winch', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
         self._init_components()
         self._update_smartdashboard_sensors()
-        super().__init__(name=name)
+        super().__init__(name)
 
     def _init_components(self):
         self._max_speed = self._config.getfloat(Climbing.GENERAL_SECTION, Climbing.MAX_SPEED_KEY)
@@ -39,20 +41,25 @@ class Climbing(Subsystem):
             self._motor.setInverted(self._config.getboolean(Climbing.GENERAL_SECTION, Climbing.INVERTED_KEY))
         if self._config.getboolean(Climbing.LIMIT_SWITCH_SECTION, Climbing.ENABLED_KEY):
             self._limit_switch = DigitalInput(self._config.getint(Climbing.LIMIT_SWITCH_SECTION, Climbing.CHANNEL_KEY))
+            self._limit_switch_inverted = self._config.getboolean(Climbing.LIMIT_SWITCH_SECTION, Climbing.INVERTED_KEY)
 
     def initDefaultCommand(self):
         self.setDefaultCommand(MoveWinch(self._robot, 'MoveWinch'))
 
     def is_retracted(self) -> bool:
+        return self._limit_switch_inverted ^ self._limit_value()
+
+    def _limit_value(self) -> bool:
         if self._limit_switch is not None:
             return self._limit_switch.get()
         else:
             return False
 
-    def _update_smartdashboard_sensors(self, speed: float):
-        SmartDashboard.putNumber("Climbing Speed", speed)
+    def _update_smartdashboard_sensors(self, speed: float = 0.0):
+        SmartDashboard.putNumber("Winch Speed", speed)
         if self._limit_switch is not None:
-            SmartDashboard.putBoolean("Climbing Switch", self._limit_switch.get())
+            SmartDashboard.putBoolean("Winch Retracted", self.is_retracted())
+            SmartDashboard.putBoolean("Winch Limit Switch State", self._limit_value())
 
     def move_winch(self, speed: float):
         adjusted_speed = 0.0
@@ -64,4 +71,4 @@ class Climbing(Subsystem):
             else:
                 adjusted_speed = 0.0
             self._motor.set(adjusted_speed)
-        self._update_smartdashboard(adjusted_speed)
+        self._update_smartdashboard_sensors(adjusted_speed)
