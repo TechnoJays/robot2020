@@ -5,7 +5,7 @@ from typing import List
 from wpilib import Joystick
 
 
-class JoystickAxis(Enum):
+class JoystickAxis:
     """Enumerates joystick axis."""
     LEFTX = 0
     LEFTY = 1
@@ -15,7 +15,7 @@ class JoystickAxis(Enum):
     DPADY = 12
 
 
-class JoystickButtons(Enum):
+class JoystickButtons:
     """Enumerates joystick buttons."""
     X = 1
     A = 2

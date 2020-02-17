@@ -15,7 +15,7 @@ class MoveWinch(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        move_speed = self.robot.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY) * -1.0
+        move_speed = self.robot.oi.get_axis(UserController.SCORING, JoystickAxis.LEFTY)
         self.robot.climbing.move_winch(move_speed)
         return Command.execute(self)
 

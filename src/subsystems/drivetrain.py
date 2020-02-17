@@ -46,7 +46,7 @@ class Drivetrain(Subsystem):
     _gyro: Optional[ADXRS450_Gyro] = None
     _gyro_angle: float = 0.0
 
-    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name: str='Drivetrain', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
@@ -54,7 +54,7 @@ class Drivetrain(Subsystem):
         self._update_smartdashboard_sensors(self._sonar_distance, self._gyro_angle)
         Drivetrain._update_smartdashboard_tank_drive(0.0, 0.0)
         Drivetrain._update_smartdashboard_arcade_drive(0.0, 0.0)
-        super().__init__(name=name)
+        super().__init__(name)
 
     def initDefaultCommand(self):
         self.setDefaultCommand(TankDrive(self._robot, 'TankDrive', modifier_scaling=self._modifier_scaling,
