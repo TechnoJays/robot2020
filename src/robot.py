@@ -1,8 +1,7 @@
 import wpilib
 from wpilib import command
 
-
-from commands.do_nothing import DoNothing
+from commands.autonomous import MoveFromLine
 from oi import OI
 from subsystems.climbing import Climbing
 from subsystems.drivetrain import Drivetrain
@@ -17,7 +16,7 @@ class MyRobot(wpilib.IterativeRobot):
     def autonomousInit(self):
         # Schedule the autonomous command
         self.drivetrain.reset_gyro_angle()
-        self.autonomous_command = DoNothing(self)
+        self.autonomous_command = MoveFromLine(self)
         self.autonomous_command.start()
 
     def testInit(self):
