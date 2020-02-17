@@ -69,7 +69,7 @@ class Climbing(Subsystem):
         if self._motor:
             if speed < 0.0:
                 adjusted_speed = speed * self._max_speed
-            elif (speed > 0.0) and (not self.is_retracted()):
+            elif speed > 0.0 and not self.is_retracted():
                 adjusted_speed = speed * self._max_speed
             else:
                 adjusted_speed = 0.0
