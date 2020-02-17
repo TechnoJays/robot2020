@@ -47,10 +47,7 @@ class Climbing(Subsystem):
         self.setDefaultCommand(MoveWinch(self._robot, 'MoveWinch'))
 
     def is_retracted(self) -> bool:
-        if (not self._limit_switch_inverted):
-            return self._limit_value()
-        else:
-            return not self._limit_value()
+        return self._limit_switch_inverted ^ self._limit_value()
 
     def _limit_value(self) -> bool:
         if self._limit_switch is not None:
