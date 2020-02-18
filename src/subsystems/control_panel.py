@@ -74,9 +74,9 @@ class ControlPanel(Subsystem):
         self._max_speed = self._config.getfloat(ControlPanel.GENERAL_SECTION, ControlPanel.MAX_SPEED_KEY)
         self._solenoid_inverted = self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.SOLENOID_INVERTED_KEY)
         if self._enabled:
-            self._color_sensor = ColorSensorV3(I2C.Port.k0nboard)
-            self._motor = PWMTalonSRX(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.CHANNEL_KEY))
-            self._motor.setInverted(self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.INVERTED_KEY))
+            self._color_sensor = ColorSensorV3(I2C.Port.kOnboard)
+            self._motor = PWMTalonSRX(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_CHANNEL_KEY))
+            self._motor.setInverted(self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_INVERTED_KEY))
             self._solenoid = Solenoid(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.SOLENOID_CHANNEL_KEY))
 
     def _load_color_profile(self):
