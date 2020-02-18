@@ -1,7 +1,7 @@
 import configparser
 from enum import Enum
 
-from wpilib import PWMTalonSRX
+from wpilib import PWMVictorSPX
 from wpilib import Solenoid
 from wpilib.command import Subsystem
 from wpilib import Color
@@ -75,7 +75,7 @@ class ControlPanel(Subsystem):
         self._solenoid_inverted = self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.SOLENOID_INVERTED_KEY)
         if self._enabled:
             self._color_sensor = ColorSensorV3(I2C.Port.kOnboard)
-            self._motor = PWMTalonSRX(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_CHANNEL_KEY))
+            self._motor = PWMVictorSPX(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_CHANNEL_KEY))
             self._motor.setInverted(self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_INVERTED_KEY))
             self._solenoid = Solenoid(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.SOLENOID_CHANNEL_KEY))
 

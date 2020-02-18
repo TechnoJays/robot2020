@@ -3,7 +3,7 @@ from typing import Optional
 
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
-from wpilib import PWMTalonSRX
+from wpilib import PWMVictorSPX
 from wpilib import ADXRS450_Gyro
 from wpilib import SmartDashboard
 from commands.tank_drive import TankDrive
@@ -119,12 +119,12 @@ class Drivetrain(Subsystem):
             self._gyro = ADXRS450_Gyro(self._config.getint(Drivetrain.GYRO_SECTION, Drivetrain.CHANNEL_KEY))
 
         if self._config.getboolean(Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.ENABLED_KEY):
-            self._left_motor = PWMTalonSRX(self._config.getint(Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
+            self._left_motor = PWMVictorSPX(self._config.getint(Drivetrain.LEFT_MOTOR_SECTION, Drivetrain.CHANNEL_KEY))
             self._left_motor.setInverted(self._config.getboolean(Drivetrain.LEFT_MOTOR_SECTION,
                                                                  Drivetrain.INVERTED_KEY))
 
         if self._config.getboolean(Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.ENABLED_KEY):
-            self._right_motor = PWMTalonSRX(self._config.getint(Drivetrain.RIGHT_MOTOR_SECTION,
+            self._right_motor = PWMVictorSPX(self._config.getint(Drivetrain.RIGHT_MOTOR_SECTION,
                                                                 Drivetrain.CHANNEL_KEY))
             self._right_motor.setInverted(self._config.getboolean(Drivetrain.RIGHT_MOTOR_SECTION,
                                                                   Drivetrain.INVERTED_KEY))
