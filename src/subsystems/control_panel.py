@@ -57,7 +57,7 @@ class ControlPanel(Subsystem):
     _color_matcher: ColorMatch = None
     _tolerance: float = None
 
-    def __init__(self, robot, name=None, configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name='ControlPanel', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
@@ -66,6 +66,7 @@ class ControlPanel(Subsystem):
         self._color_matcher.setConfidenceThreshold(self._config.getfloat(ControlPanel.GENERAL_SECTION, ControlPanel.CONFIDENCE_KEY))
         self._init_components()
         self._load_color_profile()
+        super().__init__(name)
 
     def _init_components(self):
         self._max_speed = self._config.getfloat(ControlPanel.GENERAL_SECTION, ControlPanel.MAX_SPEED_KEY)
@@ -115,7 +116,7 @@ class ControlPanel(Subsystem):
     def move(self, speed: float):
         if not self._enabled:
             return
-        
+
         if speed < -1:
             speed = -1
         elif speed > 1:
