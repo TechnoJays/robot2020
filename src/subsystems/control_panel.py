@@ -99,7 +99,7 @@ class ControlPanel(Subsystem):
         return Color(r, g, b)
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(MoveControlPanel(self, self._robot, 'MoveControlPanel'))
+        self.setDefaultCommand(MoveControlPanel(self._robot))
 
     def get_current_color(self) -> PanelColor:
         if not self._enabled:
