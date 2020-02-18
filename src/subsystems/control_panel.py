@@ -5,6 +5,7 @@ from wpilib import PWMTalonSRX
 from wpilib import Solenoid
 from wpilib.command import Subsystem
 from wpilib import I2C
+from wpilib import SmartDashboard
 
 from rev.color import ColorSensorV3
 from rev.color import CIEColor
@@ -101,6 +102,9 @@ class ControlPanel(Subsystem):
             return ControlPanel.Color.NONE
 
         color = self._color_sensor.getColor()
+        SmartDashboard.putFloat("Color R", color.r)
+        SmartDashboard.putFloat("Color G", color.g)
+        SmartDashboard.putFloat("Color B", color.B)
         match_result = self._color_matcher.matchClosest(color)
         if match_result.color == self._red_target:
             return ControlPanel.Color.RED
