@@ -4,6 +4,7 @@ from enum import Enum
 from wpilib import PWMTalonSRX
 from wpilib import Solenoid
 from wpilib.command import Subsystem
+from wpilib import Color
 from wpilib import I2C
 from wpilib import SmartDashboard
 
@@ -11,10 +12,12 @@ from rev.color import ColorSensorV3
 from rev.color import CIEColor
 from rev.color import ColorMatch
 
+from commands.move_control_panel import MoveControlPanel
+
 
 class ControlPanel(Subsystem):
 
-    class Color(Enum):
+    class PanelColor(Enum):
         RED = "Red"
         BLUE = "Blue"
         YELLOW = "Yellow"
@@ -44,12 +47,11 @@ class ControlPanel(Subsystem):
     _robot = None
     _color_sensor: ColorSensorV3 = None
     _motor = None
-    _extender = None
-    _solenoid = None
+    _solenoid: Solenoid = None
 
-    _max_speed = 0.0
-    _solenoid_inverted = False
-    _enabled = False
+    _max_speed: float = 0.0
+    _solenoid_inverted: bool = False
+    _enabled: bool = False
 
     _red_target: CIEColor = None
     _green_target: CIEColor = None
@@ -62,7 +64,7 @@ class ControlPanel(Subsystem):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
-        self._enabled = self._config.getboolean(self.GENERAL_SECTION, self.ENABLED_KEY)
+        self._enabled = self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.ENABLED_KEY)
         self._color_matcher = ColorMatch()
         self._color_matcher.setConfidenceThreshold(self._config.getfloat(ControlPanel.GENERAL_SECTION, ControlPanel.CONFIDENCE_KEY))
         self._init_components()
@@ -97,30 +99,30 @@ class ControlPanel(Subsystem):
         b = self._config.getfloat(section, ControlPanel.B_KEY)
         return ColorMatch.makeColor(r, g, b)
 
-    def get_current_color(self):
-        if not self._enabled:
-            return ControlPanel.Color.NONE
+    def initDefaultCommand(self):
+        self.setDefaultCommand(MoveControlPanel(self, self._robot, 'MoveControlPanel'))
 
-        color = self._color_sensor.getColor()
-        SmartDashboard.putFloat("Color R", color.r)
-        SmartDashboard.putFloat("Color G", color.g)
-        SmartDashboard.putFloat("Color B", color.B)
+    def get_current_color(self) -> PanelColor:
+        if not self._enabled:
+            return ControlPanel.PanelColor.NONE
+
+        color: Color = self._color_sensor.getColor()
+        ControlPanel.update_smartdashboard(color)
         match_result = self._color_matcher.matchClosest(color)
         if match_result.color == self._red_target:
-            return ControlPanel.Color.RED
-        elif match_result.color == self._red_target:
-            return ControlPanel.Color.BLUE
-        elif match_result.color == self._red_target:
-            return ControlPanel.Color.YELLOW
-        elif match_result.color == self._red_target:
-            return ControlPanel.Color.GREEN
+            return ControlPanel.PanelColor.RED
+        elif match_result.color == self._blue_target:
+            return ControlPanel.PanelColor.BLUE
+        elif match_result.color == self._yellow_target:
+            return ControlPanel.PanelColor.YELLOW
+        elif match_result.color == self._green_target:
+            return ControlPanel.PanelColor.GREEN
         else:
-            return ControlPanel.Color.NONE
+            return ControlPanel.PanelColor.NONE
 
     def move(self, speed: float):
         if not self._enabled:
             return
-
         if speed < -1:
             speed = -1
         elif speed > 1:
@@ -128,5 +130,12 @@ class ControlPanel(Subsystem):
         self._motor.set(speed * self._max_speed)
 
     def extend(self, state: bool):
+        if not self._enabled:
+            return
         self._solenoid.set(state ^ self._solenoid_inverted)
 
+    @staticmethod
+    def update_smartdashboard(color: Color):
+        SmartDashboard.putFloat("Color R", color.r)
+        SmartDashboard.putFloat("Color G", color.g)
+        SmartDashboard.putFloat("Color B", color.b)
