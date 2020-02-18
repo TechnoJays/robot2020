@@ -9,7 +9,6 @@ from wpilib import I2C
 from wpilib import SmartDashboard
 
 from rev.color import ColorSensorV3
-from rev.color import CIEColor
 from rev.color import ColorMatch
 
 from commands.move_control_panel import MoveControlPanel
@@ -53,10 +52,10 @@ class ControlPanel(Subsystem):
     _solenoid_inverted: bool = False
     _enabled: bool = False
 
-    _red_target: CIEColor = None
-    _green_target: CIEColor = None
-    _blue_target: CIEColor = None
-    _yellow_target: CIEColor = None
+    _red_target: Color = None
+    _green_target: Color = None
+    _blue_target: Color = None
+    _yellow_target: Color = None
     _color_matcher: ColorMatch = None
     _tolerance: float = None
 
@@ -92,12 +91,12 @@ class ControlPanel(Subsystem):
             self._green_target = self._load_color_target(color_profile, ControlPanel.GREEN_KEY)
             self._color_matcher.addColorMatch(self._green_target)
 
-    def _load_color_target(self, profile: str, color: str) -> CIEColor:
+    def _load_color_target(self, profile: str, color: str) -> Color:
         section = profile + color
         r = self._config.getfloat(section, ControlPanel.R_KEY)
         g = self._config.getfloat(section, ControlPanel.G_KEY)
         b = self._config.getfloat(section, ControlPanel.B_KEY)
-        return ColorMatch.makeColor(r, g, b)
+        return Color(r, g, b)
 
     def initDefaultCommand(self):
         self.setDefaultCommand(MoveControlPanel(self, self._robot, 'MoveControlPanel'))
