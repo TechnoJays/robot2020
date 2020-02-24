@@ -6,7 +6,7 @@ class LowerArm(Command):
     def __init__(self, robot, name='LowerArm', timeout=15):
         super().__init__(name, timeout)
         self.robot = robot
-        self.requires(robot.control_panel)
+        self.requires(robot.control_panel_arm)
 
     def initialize(self):
         """Called before the Command is run for the first time."""
@@ -14,7 +14,7 @@ class LowerArm(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.control_panel.extend(False)
+        self.robot.control_panel_arm.extend(False)
         return Command.execute(self)
 
     def isFinished(self):
