@@ -27,7 +27,6 @@ class ControlPanelArm(Subsystem):
         self._config.read(configfile)
         self._enabled = self._config.getboolean(ControlPanelArm.GENERAL_SECTION, ControlPanelArm.ENABLED_KEY)
         self._init_components()
-        self._load_color_profile()
         super().__init__(name)
 
     def _init_components(self):
