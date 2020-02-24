@@ -6,6 +6,8 @@ from wpilib.command import Subsystem
 from commands.lower_arm import LowerArm
 from commands.raise_arm import RaiseArm
 
+from wpilib import SmartDashboard
+
 class ControlPanelArm(Subsystem):
 
     GENERAL_SECTION = "ControlPanelArmGeneral"
@@ -29,9 +31,8 @@ class ControlPanelArm(Subsystem):
         super().__init__(name)
 
     def _init_components(self):
-        self._solenoid_inverted = self._config.getboolean(ControlPanelArm.GENERAL_SECTION, ControlPanelArm.SOLENOID_INVERTED_KEY)
         if self._enabled:
-            self._motor.setInverted(self._config.getboolean(ControlPanelArm.GENERAL_SECTION, ControlPanelArm.MOTOR_INVERTED_KEY))
+            self._solenoid_inverted = self._config.getboolean(ControlPanelArm.GENERAL_SECTION, ControlPanelArm.SOLENOID_INVERTED_KEY)
             self._solenoid = Solenoid(self._config.getint(ControlPanelArm.GENERAL_SECTION, ControlPanelArm.SOLENOID_CHANNEL_KEY))
 
     def initDefaultCommand(self):
