@@ -99,18 +99,21 @@ class ControlPanel(Subsystem):
             return ControlPanel.PanelColor.NONE
 
         color: Color = self._color_sensor.getColor()
-        ControlPanel.update_smartdashboard(color)
-        match_result = self._color_matcher.matchClosest(color)
-        if match_result.color == self._red_target:
-            return ControlPanel.PanelColor.RED
-        elif match_result.color == self._blue_target:
-            return ControlPanel.PanelColor.BLUE
-        elif match_result.color == self._yellow_target:
-            return ControlPanel.PanelColor.YELLOW
-        elif match_result.color == self._green_target:
-            return ControlPanel.PanelColor.GREEN
+        match_result: Color = self._color_matcher.matchClosestColor(color, 0.95)
+        foundColor: ControlPanel.PanelColor = None
+        if match_result == self._red_target:
+            foundColor = ControlPanel.PanelColor.RED
+        elif match_result == self._blue_target:
+            foundColor = ControlPanel.PanelColor.BLUE
+        elif match_result == self._yellow_target:
+            foundColor = ControlPanel.PanelColor.YELLOW
+        elif match_result == self._green_target:
+            foundColor = ControlPanel.PanelColor.GREEN
         else:
-            return ControlPanel.PanelColor.NONE
+            foundColor = ControlPanel.PanelColor.NONE
+        
+        ControlPanel.update_smartdashboard(color, foundColor)
+        return foundColor
 
     def move(self, speed: float):
         if not self._enabled:
@@ -120,9 +123,11 @@ class ControlPanel(Subsystem):
         elif speed > 1:
             speed = 1
         self._motor.set(speed * self._max_speed)
+        self.get_current_color()
 
     @staticmethod
-    def update_smartdashboard(color: Color):
-        SmartDashboard.putFloat("Color R", color.r)
-        SmartDashboard.putFloat("Color G", color.g)
-        SmartDashboard.putFloat("Color B", color.b)
+    def update_smartdashboard(color: Color, foundColor: str):
+        SmartDashboard.putNumber("Color R", color.red)
+        SmartDashboard.putNumber("Color G", color.green)
+        SmartDashboard.putNumber("Color B", color.blue)
+        SmartDashboard.putString("Detected Color", str(foundColor))
