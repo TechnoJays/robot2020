@@ -1,19 +1,19 @@
 from wpilib.command import Command
 
-from subsystems.control_panel import ControlPanel
+from subsystems.control_panel import PanelColor
 
 
 class SpinToColor(Command):
-    _target_color: ControlPanel.PanelColor = ControlPanel.PanelColor.NONE
+    _target_color: PanelColor = PanelColor.NONE
     _speed: float = 1.0
 
     # This year the game message is a single character denoting the color target. It is "" until stage 3
     _color_target_map = {
-        "": ControlPanel.PanelColor.NONE,
-        "R": ControlPanel.PanelColor.RED,
-        "G": ControlPanel.PanelColor.GREEN,
-        "B": ControlPanel.PanelColor.BLUE,
-        "Y": ControlPanel.PanelColor.YELLOW,
+        "": PanelColor.NONE,
+        "R": PanelColor.RED,
+        "G": PanelColor.GREEN,
+        "B": PanelColor.BLUE,
+        "Y": PanelColor.YELLOW,
     }
 
     def __init__(self, robot, speed: float, name='SpinToColor', timeout=16):
@@ -39,7 +39,7 @@ class SpinToColor(Command):
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
         current_color = self.robot.control_panel.get_current_color()
-        return (self._target_color == ControlPanel.PanelColor.NONE) or \
+        return (self._target_color == PanelColor.NONE) or \
                (self.robot.control_panel.get_scored_color(current_color) == self._target_color) or self.isTimedOut()
 
     def end(self):

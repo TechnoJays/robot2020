@@ -13,14 +13,15 @@ from rev.color import ColorMatch
 from commands.move_control_panel import MoveControlPanel
 
 
-class ControlPanel(Subsystem):
+class PanelColor(Enum):
+    RED = "Red"
+    BLUE = "Blue"
+    YELLOW = "Yellow"
+    GREEN = "Green"
+    NONE = "None"
 
-    class PanelColor(Enum):
-        RED = "Red"
-        BLUE = "Blue"
-        YELLOW = "Yellow"
-        GREEN = "Green"
-        NONE = "None"
+
+class ControlPanel(Subsystem):
 
     GENERAL_SECTION = "ControlPanelGeneral"
 
@@ -79,16 +80,16 @@ class ControlPanel(Subsystem):
         if self._enabled:
             color_profile = self._config.get(ControlPanel.GENERAL_SECTION, ControlPanel.COLOR_PROFILE_KEY)
             section = color_profile + ControlPanel.MAP_KEY
-            red_map = self._config.get(section, ControlPanel.PanelColor.RED.value)
-            blue_map = self._config.get(section, ControlPanel.PanelColor.BLUE.value)
-            yellow_map = self._config.get(section, ControlPanel.PanelColor.YELLOW.value)
-            green_map = self._config.get(section, ControlPanel.PanelColor.GREEN.value)
+            red_map = self._config.get(section, PanelColor.RED.value)
+            blue_map = self._config.get(section, PanelColor.BLUE.value)
+            yellow_map = self._config.get(section, PanelColor.YELLOW.value)
+            green_map = self._config.get(section, PanelColor.GREEN.value)
             self._scoring_map = {
-                ControlPanel.PanelColor.RED: ControlPanel.PanelColor(red_map),
-                ControlPanel.PanelColor.BLUE: ControlPanel.PanelColor(blue_map),
-                ControlPanel.PanelColor.YELLOW: ControlPanel.PanelColor(yellow_map),
-                ControlPanel.PanelColor.GREEN: ControlPanel.PanelColor(green_map),
-                ControlPanel.PanelColor.NONE: ControlPanel.PanelColor.NONE
+                PanelColor.RED: PanelColor(red_map),
+                PanelColor.BLUE: PanelColor(blue_map),
+                PanelColor.YELLOW: PanelColor(yellow_map),
+                PanelColor.GREEN: PanelColor(green_map),
+                PanelColor.NONE: PanelColor.NONE
             }
 
     def _load_color_profile(self):
@@ -115,27 +116,27 @@ class ControlPanel(Subsystem):
 
     def get_current_color(self) -> PanelColor:
         if not self._enabled:
-            return ControlPanel.PanelColor.NONE
+            return PanelColor.NONE
 
         color: Color = self._color_sensor.getColor()
         match_result: Color = self._color_matcher.matchClosestColor(color, 0.95)
-        found_color: ControlPanel.PanelColor
+        found_color: PanelColor
         if match_result == self._red_target:
-            found_color = ControlPanel.PanelColor.RED
+            found_color = PanelColor.RED
         elif match_result == self._blue_target:
-            found_color = ControlPanel.PanelColor.BLUE
+            found_color = PanelColor.BLUE
         elif match_result == self._yellow_target:
-            found_color = ControlPanel.PanelColor.YELLOW
+            found_color = PanelColor.YELLOW
         elif match_result == self._green_target:
-            found_color = ControlPanel.PanelColor.GREEN
+            found_color = PanelColor.GREEN
         else:
-            found_color = ControlPanel.PanelColor.NONE
+            found_color = PanelColor.NONE
         ControlPanel.update_smartdashboard(color, found_color)
         return found_color
 
     def get_scored_color(self, found_color: PanelColor) -> PanelColor:
         if not self._enabled:
-            return ControlPanel.PanelColor.NONE
+            return PanelColor.NONE
 
         scored_color = self._scoring_map.get(found_color)
         SmartDashboard.putString("Color Scored", str(scored_color))
