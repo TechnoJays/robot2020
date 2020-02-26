@@ -2,7 +2,6 @@ import configparser
 from enum import Enum
 
 from wpilib import PWMVictorSPX
-from wpilib import Solenoid
 from wpilib.command import Subsystem
 from wpilib import Color
 from wpilib import I2C
@@ -30,8 +29,6 @@ class ControlPanel(Subsystem):
     MOTOR_INVERTED_KEY = "MOTOR_INVERTED"
     MOTOR_CHANNEL_KEY = "MOTOR_CHANNEL"
     MAX_SPEED_KEY = "MAX_SPEED"
-    SOLENOID_CHANNEL_KEY = "SOLENOID_CHANNEL"
-    SOLENOID_INVERTED_KEY = "SOLENOID_INVERTED"
     CONFIDENCE_KEY = "CONFIDENCE"
 
     R_KEY = "R"
@@ -46,10 +43,8 @@ class ControlPanel(Subsystem):
     _robot = None
     _color_sensor: ColorSensorV3 = None
     _motor = None
-    _solenoid: Solenoid = None
 
     _max_speed: float = 0.0
-    _solenoid_inverted: bool = False
     _enabled: bool = False
 
     _red_target: Color = None
@@ -72,12 +67,10 @@ class ControlPanel(Subsystem):
 
     def _init_components(self):
         self._max_speed = self._config.getfloat(ControlPanel.GENERAL_SECTION, ControlPanel.MAX_SPEED_KEY)
-        self._solenoid_inverted = self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.SOLENOID_INVERTED_KEY)
         if self._enabled:
             self._color_sensor = ColorSensorV3(I2C.Port.kOnboard)
             self._motor = PWMVictorSPX(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_CHANNEL_KEY))
             self._motor.setInverted(self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_INVERTED_KEY))
-            self._solenoid = Solenoid(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.SOLENOID_CHANNEL_KEY))
 
     def _load_color_profile(self):
         if self._enabled:
@@ -127,11 +120,6 @@ class ControlPanel(Subsystem):
         elif speed > 1:
             speed = 1
         self._motor.set(speed * self._max_speed)
-
-    def extend(self, state: bool):
-        if not self._enabled:
-            return
-        self._solenoid.set(state ^ self._solenoid_inverted)
 
     @staticmethod
     def update_smartdashboard(color: Color):

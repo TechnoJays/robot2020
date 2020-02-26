@@ -5,6 +5,7 @@ from commands.autonomous import MoveFromLine
 from oi import OI
 from subsystems.climbing import Climbing
 from subsystems.control_panel import ControlPanel
+from subsystems.control_panel_arm import ControlPanelArm
 from subsystems.drivetrain import Drivetrain
 from subsystems.shooter import Shooter
 
@@ -14,6 +15,7 @@ class MyRobot(wpilib.IterativeRobot):
     drivetrain = None
     climbing = None
     control_panel = None
+    control_panel_arm = None
     shooter = None
     autonomous_command = None
 
@@ -42,6 +44,7 @@ class MyRobot(wpilib.IterativeRobot):
         self.drivetrain = Drivetrain(self)
         self.climbing = Climbing(self)
         self.control_panel = ControlPanel(self)
+        self.control_panel_arm = ControlPanelArm(self)
         self.shooter = Shooter(self)
         self.oi.setup_button_bindings()
         wpilib.CameraServer.launch()
