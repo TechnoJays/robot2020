@@ -54,6 +54,14 @@ class ControlPanel(Subsystem):
     _color_matcher: ColorMatch = None
     _tolerance: float = None
 
+    scoring_map = {
+        PanelColor.YELLOW: PanelColor.GREEN,
+        PanelColor.RED: PanelColor. BLUE,
+        PanelColor.GREEN: PanelColor.YELLOW,
+        PanelColor.BLUE: PanelColor.RED,
+        PanelColor.NONE: PanelColor.NONE
+    }
+
     def __init__(self, robot, name='ControlPanel', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
@@ -111,8 +119,7 @@ class ControlPanel(Subsystem):
             foundColor = ControlPanel.PanelColor.GREEN
         else:
             foundColor = ControlPanel.PanelColor.NONE
-        
-        ControlPanel.update_smartdashboard(color, foundColor)
+        ControlPanel.update_smartdashboard(self, color, foundColor)
         return foundColor
 
     def move(self, speed: float):
@@ -125,9 +132,9 @@ class ControlPanel(Subsystem):
         self._motor.set(speed * self._max_speed)
         self.get_current_color()
 
-    @staticmethod
-    def update_smartdashboard(color: Color, foundColor: str):
+    def update_smartdashboard(self, color: Color, foundColor: PanelColor):
         SmartDashboard.putNumber("Color R", color.red)
         SmartDashboard.putNumber("Color G", color.green)
         SmartDashboard.putNumber("Color B", color.blue)
-        SmartDashboard.putString("Detected Color", str(foundColor))
+        SmartDashboard.putString("Color Detected", str(foundColor))
+        SmartDashboard.putString("Color Scored", str(self.scoring_map.get(foundColor)))
