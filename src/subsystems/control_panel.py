@@ -1,5 +1,4 @@
 import configparser
-from enum import Enum
 
 from wpilib import PWMVictorSPX
 from wpilib.command import Subsystem
@@ -11,14 +10,7 @@ from rev.color import ColorSensorV3
 from rev.color import ColorMatch
 
 from commands.move_control_panel import MoveControlPanel
-
-
-class PanelColor(Enum):
-    RED = "Red"
-    BLUE = "Blue"
-    YELLOW = "Yellow"
-    GREEN = "Green"
-    NONE = "None"
+from models.control_panel_models import PanelColor
 
 
 class ControlPanel(Subsystem):

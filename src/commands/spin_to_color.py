@@ -1,6 +1,6 @@
 from wpilib.command import Command
 
-from subsystems.control_panel import PanelColor
+from models.control_panel_models import PanelColor
 
 
 class SpinToColor(Command):
