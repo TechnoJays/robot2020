@@ -39,6 +39,7 @@ class ControlPanel(Subsystem):
     BLUE_KEY = "Blue"
     YELLOW_KEY = "Yellow"
     GREEN_KEY = "Green"
+    MAP_KEY = "Map"
 
     _robot = None
     _color_sensor: ColorSensorV3 = None
@@ -53,14 +54,7 @@ class ControlPanel(Subsystem):
     _yellow_target: Color = None
     _color_matcher: ColorMatch = None
     _tolerance: float = None
-
-    scoring_map = {
-        PanelColor.YELLOW: PanelColor.GREEN,
-        PanelColor.RED: PanelColor. BLUE,
-        PanelColor.GREEN: PanelColor.YELLOW,
-        PanelColor.BLUE: PanelColor.RED,
-        PanelColor.NONE: PanelColor.NONE
-    }
+    _scoring_map = {}
 
     def __init__(self, robot, name='ControlPanel', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
@@ -70,6 +64,7 @@ class ControlPanel(Subsystem):
         self._color_matcher = ColorMatch()
         self._color_matcher.setConfidenceThreshold(self._config.getfloat(ControlPanel.GENERAL_SECTION, ControlPanel.CONFIDENCE_KEY))
         self._init_components()
+        self._load_color_map()
         self._load_color_profile()
         super().__init__(name)
 
@@ -79,6 +74,22 @@ class ControlPanel(Subsystem):
             self._color_sensor = ColorSensorV3(I2C.Port.kOnboard)
             self._motor = PWMVictorSPX(self._config.getint(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_CHANNEL_KEY))
             self._motor.setInverted(self._config.getboolean(ControlPanel.GENERAL_SECTION, ControlPanel.MOTOR_INVERTED_KEY))
+
+    def _load_color_map(self):
+        if self._enabled:
+            color_profile = self._config.get(ControlPanel.GENERAL_SECTION, ControlPanel.COLOR_PROFILE_KEY)
+            section = color_profile + ControlPanel.MAP_KEY
+            red_map = self._config.get(section, ControlPanel.PanelColor.RED.value)
+            blue_map = self._config.get(section, ControlPanel.PanelColor.BLUE.value)
+            yellow_map = self._config.get(section, ControlPanel.PanelColor.YELLOW.value)
+            green_map = self._config.get(section, ControlPanel.PanelColor.GREEN.value)
+            self._scoring_map = {
+                ControlPanel.PanelColor.RED: ControlPanel.PanelColor(red_map),
+                ControlPanel.PanelColor.BLUE: ControlPanel.PanelColor(blue_map),
+                ControlPanel.PanelColor.YELLOW: ControlPanel.PanelColor(yellow_map),
+                ControlPanel.PanelColor.GREEN: ControlPanel.PanelColor(green_map),
+                ControlPanel.PanelColor.NONE: ControlPanel.PanelColor.NONE
+            }
 
     def _load_color_profile(self):
         if self._enabled:
@@ -108,19 +119,27 @@ class ControlPanel(Subsystem):
 
         color: Color = self._color_sensor.getColor()
         match_result: Color = self._color_matcher.matchClosestColor(color, 0.95)
-        foundColor: ControlPanel.PanelColor = None
+        found_color: ControlPanel.PanelColor
         if match_result == self._red_target:
-            foundColor = ControlPanel.PanelColor.RED
+            found_color = ControlPanel.PanelColor.RED
         elif match_result == self._blue_target:
-            foundColor = ControlPanel.PanelColor.BLUE
+            found_color = ControlPanel.PanelColor.BLUE
         elif match_result == self._yellow_target:
-            foundColor = ControlPanel.PanelColor.YELLOW
+            found_color = ControlPanel.PanelColor.YELLOW
         elif match_result == self._green_target:
-            foundColor = ControlPanel.PanelColor.GREEN
+            found_color = ControlPanel.PanelColor.GREEN
         else:
-            foundColor = ControlPanel.PanelColor.NONE
-        ControlPanel.update_smartdashboard(self, color, foundColor)
-        return foundColor
+            found_color = ControlPanel.PanelColor.NONE
+        ControlPanel.update_smartdashboard(color, found_color)
+        return found_color
+
+    def get_scored_color(self, found_color: PanelColor) -> PanelColor:
+        if not self._enabled:
+            return ControlPanel.PanelColor.NONE
+
+        scored_color = self._scoring_map.get(found_color)
+        SmartDashboard.putString("Color Scored", str(scored_color))
+        return scored_color
 
     def move(self, speed: float):
         if not self._enabled:
@@ -132,9 +151,9 @@ class ControlPanel(Subsystem):
         self._motor.set(speed * self._max_speed)
         self.get_current_color()
 
-    def update_smartdashboard(self, color: Color, foundColor: PanelColor):
+    @staticmethod
+    def update_smartdashboard(color: Color, found_color: PanelColor):
         SmartDashboard.putNumber("Color R", color.red)
         SmartDashboard.putNumber("Color G", color.green)
         SmartDashboard.putNumber("Color B", color.blue)
-        SmartDashboard.putString("Color Detected", str(foundColor))
-        SmartDashboard.putString("Color Scored", str(self.scoring_map.get(foundColor)))
+        SmartDashboard.putString("Color Detected", str(found_color))

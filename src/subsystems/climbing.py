@@ -26,7 +26,7 @@ class Climbing(Subsystem):
     _limit_switch = None
     _limit_switch_inverted = False
 
-    def __init__(self, robot, name: str ='Winch', configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name: str = 'Winch', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)

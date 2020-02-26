@@ -4,7 +4,7 @@ from wpilib import PWMVictorSPX
 from wpilib import SmartDashboard
 from wpilib.command import Subsystem
 
-from commands.stop_shoot import StopShoot
+from commands.do_nothing_shooter import DoNothingShooter
 
 
 class Shooter(Subsystem):
@@ -21,7 +21,7 @@ class Shooter(Subsystem):
     _config = None
     _motor = None
 
-    def __init__(self, robot, name: str ='Shooter', configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name: str = 'Shooter', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
@@ -36,7 +36,7 @@ class Shooter(Subsystem):
             self._motor.setInverted(self._config.getboolean(Shooter.GENERAL_SECTION, Shooter.INVERTED_KEY))
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(StopShoot(self._robot, 'StopShoot'))
+        self.setDefaultCommand(DoNothingShooter(self._robot, 'DoNothingShooter'))
 
     def move(self, speed: float):
         adjusted_speed = 0.0

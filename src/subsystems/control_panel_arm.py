@@ -1,12 +1,11 @@
 import configparser
 
+from wpilib import SmartDashboard
 from wpilib import Solenoid
 from wpilib.command import Subsystem
 
-from commands.lower_arm import LowerArm
-from commands.raise_arm import RaiseArm
+from commands.do_nothing_arm import DoNothingArm
 
-from wpilib import SmartDashboard
 
 class ControlPanelArm(Subsystem):
 
@@ -35,13 +34,14 @@ class ControlPanelArm(Subsystem):
             self._solenoid = Solenoid(self._config.getint(ControlPanelArm.GENERAL_SECTION, ControlPanelArm.SOLENOID_CHANNEL_KEY))
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(LowerArm(self._robot))
+        self.setDefaultCommand(DoNothingArm(self._robot))
 
     def extend(self, state: bool):
         if not self._enabled:
             return
         self._solenoid.set(state ^ self._solenoid_inverted)
+        ControlPanelArm.update_smartdashboard(self._solenoid.get())
 
     @staticmethod
-    def update_smartdashboard(self):
-        SmartDashboard.putBoolean("Control Panel Arm Solenoid", self._solenoid.get())
+    def update_smartdashboard(solenoid: bool):
+        SmartDashboard.putBoolean("Control Panel Arm Solenoid", solenoid)
