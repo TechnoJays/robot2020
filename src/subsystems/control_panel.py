@@ -119,7 +119,6 @@ class ControlPanel(Subsystem):
             foundColor = ControlPanel.PanelColor.GREEN
         else:
             foundColor = ControlPanel.PanelColor.NONE
-        
         ControlPanel.update_smartdashboard(self, color, foundColor)
         return foundColor
 
@@ -133,7 +132,6 @@ class ControlPanel(Subsystem):
         self._motor.set(speed * self._max_speed)
         self.get_current_color()
 
-    @staticmethod
     def update_smartdashboard(self, color: Color, foundColor: PanelColor):
         SmartDashboard.putNumber("Color R", color.red)
         SmartDashboard.putNumber("Color G", color.green)

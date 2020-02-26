@@ -12,6 +12,7 @@ from commands.shoot_reverse import ShootReverse
 from commands.timed_spin import TimedSpin
 from commands.cancel_spin import CancelSpin
 
+
 class JoystickAxis:
     """Enumerates joystick axis."""
     LEFTX = 0
@@ -129,7 +130,6 @@ class OI:
         cancel_spin_button.whenPressed(CancelSpin(self.robot))
         time_spin_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.X)
         time_spin_button.whenPressed(TimedSpin(self.robot, 'TimedSpin', 16.0))
-
 
     def get_auto_choice(self) -> int:
         return self._auto_program_chooser.getSelected()
