@@ -1,8 +1,8 @@
 from wpilib.command import Command
 
-class Shoot(Command):
+class ShootReverse(Command):
 
-    def __init__(self, robot, name='Shoot', timeout=15):
+    def __init__(self, robot, name='ShootReverse', timeout=15):
         super().__init__(name, timeout)
         self.robot = robot
         self.requires(robot.shooter)
@@ -13,7 +13,7 @@ class Shoot(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.shooter.move(1.0)
+        self.robot.shooter.move(-1.0)
         return Command.execute(self)
 
     def isFinished(self):

@@ -8,7 +8,7 @@ from wpilib.command import JoystickButton
 from commands.lower_arm import LowerArm
 from commands.raise_arm import RaiseArm
 from commands.shoot import Shoot
-
+from commands.shoot_reverse import ShootReverse
 
 class JoystickAxis:
     """Enumerates joystick axis."""
@@ -121,6 +121,8 @@ class OI:
         lower_arm_button.whenPressed(LowerArm(self.robot))
         shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER)
         shoot_button.whileHeld(Shoot(self.robot))
+        shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER)
+        shoot_button.whileHeld(ShootReverse(self.robot))
 
     def get_auto_choice(self) -> int:
         return self._auto_program_chooser.getSelected()
