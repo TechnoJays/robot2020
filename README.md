@@ -9,24 +9,24 @@ Southfield High School Team 94 (NinetyFouriors) robot.
 
 ### Development Requirements
 
-* **Python 3.6**: This codebase uses Python 3.6
+* **Python 3.8**: This codebase uses Python 3.8
 * [pyfrc]: Be sure to follow the [pyfrc instructions] for the latest roboPy setup. This is largely handled by the install of this project mentioned below.
 
 It is highly recommended that you use an python environment manager with python to help as the version
 of python required by pyfrc changes.
 
-* [pyenv] is useful for managing multiple python versions (3.6) on your computer: **NOTE your python version and pip version/dependencies are highly correlated**
+* [pyenv] is useful for managing multiple python versions (3.8) on your computer: **NOTE your python version and pip version/dependencies are highly correlated**
   * `brew install pyenv` for macOS and [Homebrew]
   * `scoop install python` with [Scoop] is the closest thing if you have the misfortune to be using Windows and possibly follow [this page] for more instructions on supporting different python versions
   * [pipenv] is useful for dependency management for this project as well
-  * `pipenv --python 3.6` to create a python 3.6 environment for this project
+  * `pipenv --python 3.8` to create a python 3.8 environment for this project
   * `pipenv install -e .` to setup this project in the created virtualenv
   * `pipenv shell` to enter the environment for this project
   * `tox` after that to run the tests
 
 IDEs like [Pycharm also support pipenv].
 
-Note: If you are confident that your system version of python is exactly python 3.6, then you can simply use:
+Note: If you are confident that your system version of python is exactly python 3.8, then you can simply use:
 
 ```bash
 pip3 install -e .
