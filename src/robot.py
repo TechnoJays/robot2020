@@ -1,5 +1,6 @@
 import wpilib
 from wpilib import command
+from wpilib import SmartDashboard
 
 from commands.autonomous import MoveFromLine
 from oi import OI
@@ -55,6 +56,7 @@ class MyRobot(wpilib.IterativeRobot):
 
     def teleopPeriodic(self):
         """This function is called periodically during operator control."""
+        SmartDashboard.putString("Color Target", str(self.oi.get_game_message()))
         command.Scheduler.getInstance().run()
 
     def testPeriodic(self):
