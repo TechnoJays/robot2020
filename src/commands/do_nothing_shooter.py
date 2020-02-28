@@ -1,8 +1,9 @@
 from wpilib.command import Command
 
-class StopShoot(Command):
 
-    def __init__(self, robot, name='Shoot', timeout=15):
+class DoNothingShooter(Command):
+
+    def __init__(self, robot, name='DoNothingShooter', timeout=15):
         super().__init__(name, timeout)
         self.robot = robot
         self.requires(robot.shooter)
@@ -18,7 +19,7 @@ class StopShoot(Command):
 
     def isFinished(self):
         """Returns true when the Command no longer needs to be run"""
-        return True
+        return False
 
     def end(self):
         """Called once after isFinished returns true"""

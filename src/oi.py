@@ -3,14 +3,14 @@ from enum import Enum
 from typing import List
 
 from wpilib import Joystick
+from wpilib import DriverStation
 from wpilib.command import JoystickButton
 
 from commands.lower_arm import LowerArm
 from commands.raise_arm import RaiseArm
 from commands.shoot import Shoot
-from commands.shoot_reverse import ShootReverse
+from commands.spin_to_color import SpinToColor
 from commands.timed_spin import TimedSpin
-from commands.cancel_spin import CancelSpin
 
 
 class JoystickAxis:
@@ -123,19 +123,23 @@ class OI:
         lower_arm_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.A)
         lower_arm_button.whenPressed(LowerArm(self.robot))
         shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER)
-        shoot_button.whileHeld(Shoot(self.robot))
+        shoot_button.whileHeld(Shoot(self.robot, 1.0))
         reverse_shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER)
-        reverse_shoot_button.whileHeld(ShootReverse(self.robot))
-        cancel_spin_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.B)
-        cancel_spin_button.whenPressed(CancelSpin(self.robot))
+        reverse_shoot_button.whileHeld(Shoot(self.robot, -1.0))
         time_spin_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.X)
-        time_spin_button.whenPressed(TimedSpin(self.robot, 'TimedSpin', 16.0))
+        time_spin_button.whenPressed(TimedSpin(self.robot, 16.0, 1.0))
+        target_spin_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.B)
+        target_spin_button.whenPressed(SpinToColor(self.robot, 1.0))
 
     def get_auto_choice(self) -> int:
         return self._auto_program_chooser.getSelected()
 
     def get_position(self) -> int:
         return self._starting_chooser.getSelected()
+
+    @staticmethod
+    def get_game_message() -> str:
+        return DriverStation.getInstance().getGameSpecificMessage()
 
     def get_axis(self, user: UserController, axis: JoystickAxis) -> float:
         """Read axis value for specified controller/axis.

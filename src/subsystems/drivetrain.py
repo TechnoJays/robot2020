@@ -42,7 +42,7 @@ class Drivetrain(Subsystem):
     _gyro: Optional[ADXRS450_Gyro] = None
     _gyro_angle: float = 0.0
 
-    def __init__(self, robot, name: str='Drivetrain', configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name: str = 'Drivetrain', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
@@ -125,7 +125,7 @@ class Drivetrain(Subsystem):
 
         if self._config.getboolean(Drivetrain.RIGHT_MOTOR_SECTION, Drivetrain.ENABLED_KEY):
             self._right_motor = PWMVictorSPX(self._config.getint(Drivetrain.RIGHT_MOTOR_SECTION,
-                                                                Drivetrain.CHANNEL_KEY))
+                                                                 Drivetrain.CHANNEL_KEY))
             self._right_motor.setInverted(self._config.getboolean(Drivetrain.RIGHT_MOTOR_SECTION,
                                                                   Drivetrain.INVERTED_KEY))
 

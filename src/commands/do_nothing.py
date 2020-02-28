@@ -2,8 +2,8 @@ from wpilib.command import Command
 
 
 class DoNothing(Command):
-    
-    def __init__(self, robot, name: str =None, timeout: float =15.0):
+
+    def __init__(self, robot, name: str = 'DoNothing', timeout: float = 15.0):
         """Constructor"""
         super().__init__(name, timeout)
 

@@ -7,7 +7,7 @@ class DriveTime(Command):
     _duration: float = None
     _speed: float = None
 
-    def __init__(self, robot, duration: float, speed: float, name=None, timeout=15):
+    def __init__(self, robot, duration: float, speed: float, name='DriveTime', timeout=15):
         """Constructor"""
         super().__init__(name, timeout)
         self.robot = robot
