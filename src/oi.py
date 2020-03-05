@@ -6,7 +6,7 @@ from wpilib import DriverStation
 from wpilib import Joystick
 from wpilib.command import JoystickButton
 
-from commands.shoot import Shoot
+from commands.vacuum import Vacuum
 
 
 class JoystickAxis:
@@ -114,11 +114,11 @@ class OI:
         pass
 
     def setup_button_bindings(self):
-        shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER)
-        shoot_button.whileHeld(Shoot(self.robot, 1.0))
-        reverse_shoot_button = JoystickButton(self._controllers[UserController.SCORING.value],
-                                              JoystickButtons.LEFTBUMPER)
-        reverse_shoot_button.whileHeld(Shoot(self.robot, -1.0))
+        # Spaceballs!
+        suck_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER)
+        suck_button.whileHeld(Vacuum(self.robot, 1.0))
+        blow_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER)
+        blow_button.whileHeld(Vacuum(self.robot, -1.0))
 
     def get_auto_choice(self) -> int:
         return self._auto_program_chooser.getSelected()
