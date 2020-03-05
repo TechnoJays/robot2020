@@ -2,15 +2,11 @@ import configparser
 from enum import Enum
 from typing import List
 
-from wpilib import Joystick
 from wpilib import DriverStation
+from wpilib import Joystick
 from wpilib.command import JoystickButton
 
-from commands.lower_arm import LowerArm
-from commands.raise_arm import RaiseArm
 from commands.shoot import Shoot
-from commands.spin_to_color import SpinToColor
-from commands.timed_spin import TimedSpin
 
 
 class JoystickAxis:
@@ -118,18 +114,11 @@ class OI:
         pass
 
     def setup_button_bindings(self):
-        raise_arm_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.Y)
-        raise_arm_button.whenPressed(RaiseArm(self.robot))
-        lower_arm_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.A)
-        lower_arm_button.whenPressed(LowerArm(self.robot))
         shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER)
         shoot_button.whileHeld(Shoot(self.robot, 1.0))
-        reverse_shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER)
+        reverse_shoot_button = JoystickButton(self._controllers[UserController.SCORING.value],
+                                              JoystickButtons.LEFTBUMPER)
         reverse_shoot_button.whileHeld(Shoot(self.robot, -1.0))
-        time_spin_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.X)
-        time_spin_button.whenPressed(TimedSpin(self.robot, 16.0, 1.0))
-        target_spin_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.B)
-        target_spin_button.whenPressed(SpinToColor(self.robot, 1.0))
 
     def get_auto_choice(self) -> int:
         return self._auto_program_chooser.getSelected()
@@ -152,7 +141,7 @@ class OI:
             Current position for the specified axis. (Range [-1.0, 1.0])
         """
         controller = self._controllers[user.value]
-        value: float = 0.0
+        value: float
         if axis == JoystickAxis.DPADX:
             value = controller.getPOV()
             if value == 90:
