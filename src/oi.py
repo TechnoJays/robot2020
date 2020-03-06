@@ -4,8 +4,12 @@ from typing import List
 
 from wpilib import DriverStation
 from wpilib import Joystick
+from wpilib import SendableChooser
+from wpilib import SmartDashboard
+from wpilib.command import CommandGroup
 from wpilib.command import JoystickButton
 
+from commands.autonomous import DeadReckoningScore, MoveFromLine
 from commands.vacuum import Vacuum
 
 
@@ -111,7 +115,10 @@ class OI:
         JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
 
     def _create_smartdashboard_buttons(self):
-        pass
+        self._auto_program_chooser = SendableChooser()
+        self._auto_program_chooser.setDefaultOption("Score Low", DeadReckoningScore(self.robot))
+        self._auto_program_chooser.addOption("Move From Line", MoveFromLine(self.robot))
+        SmartDashboard.putData("Autonomous", self._auto_program_chooser)
 
     def setup_button_bindings(self):
         # Spaceballs!
@@ -120,7 +127,7 @@ class OI:
         blow_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER)
         blow_button.whileHeld(Vacuum(self.robot, -1.0))
 
-    def get_auto_choice(self) -> int:
+    def get_auto_choice(self) -> CommandGroup:
         return self._auto_program_chooser.getSelected()
 
     def get_position(self) -> int:
