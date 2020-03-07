@@ -44,6 +44,7 @@ class MyRobot(wpilib.IterativeRobot):
         self.vacuum = Vacuum(self)
         self.shooter = Shooter(self)
         self.oi.setup_button_bindings()
+        wpilib.CameraServer.launch()
 
     def autonomousPeriodic(self):
         """This function is called periodically during autonomous."""
