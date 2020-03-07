@@ -36,7 +36,7 @@ class Vacuum(Subsystem):
             self._motor.setInverted(self._config.getboolean(Vacuum.GENERAL_SECTION, Vacuum.INVERTED_KEY))
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(DoNothingVacuum(self._robot, 'DoNothingVacuum'))
+        self.setDefaultCommand(DoNothingVacuum(self._robot))
 
     def move(self, speed: float):
         adjusted_speed = 0.0
