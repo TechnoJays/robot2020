@@ -1,13 +1,11 @@
 from wpilib.command import Command
 
 
-class Shoot(Command):
-    _speed: float = None
+class RaiseShooter(Command):
 
-    def __init__(self, robot, speed: float, name='Shoot', timeout=15):
+    def __init__(self, robot, name='RaiseShooter', timeout=15):
         super().__init__(name, timeout)
         self.robot = robot
-        self._speed = speed
         self.requires(robot.shooter)
 
     def initialize(self):
@@ -16,7 +14,7 @@ class Shoot(Command):
 
     def execute(self):
         """Called repeatedly when this Command is scheduled to run"""
-        self.robot.shooter.move(self._speed)
+        self.robot.shooter.upheave(True)
         return Command.execute(self)
 
     def isFinished(self):
@@ -25,7 +23,7 @@ class Shoot(Command):
 
     def end(self):
         """Called once after isFinished returns true"""
-        self.robot.shooter.move(0.0)
+        pass
 
     def interrupted(self):
         """Called when another command which requires one or more of the same subsystems is scheduled to run"""

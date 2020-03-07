@@ -1,50 +1,46 @@
 import configparser
 
-from wpilib import PWMVictorSPX
 from wpilib import SmartDashboard
+from wpilib import Solenoid
 from wpilib.command import Subsystem
 
 from commands.do_nothing_shooter import DoNothingShooter
 
 
 class Shooter(Subsystem):
-    # Config file section names
     GENERAL_SECTION = "ShooterGeneral"
-    ENABLED_KEY = "ENABLED"
-    INVERTED_KEY = "INVERTED"
-    CHANNEL_KEY = "CHANNEL"
-    MAX_SPEED_KEY = "MAX_SPEED"
 
-    _max_speed = 0
+    ENABLED_KEY = "ENABLED"
+    SOLENOID_CHANNEL_KEY = "SOLENOID_CHANNEL"
+    SOLENOID_INVERTED_KEY = "SOLENOID_INVERTED"
 
     _robot = None
-    _config = None
-    _motor = None
+    _solenoid: Solenoid = None
+    _solenoid_inverted: bool = False
+    _enabled: bool = False
 
-    def __init__(self, robot, name: str = 'Shooter', configfile='/home/lvuser/py/configs/subsystems.ini'):
+    def __init__(self, robot, name='Shooter', configfile='/home/lvuser/py/configs/subsystems.ini'):
         self._robot = robot
         self._config = configparser.ConfigParser()
         self._config.read(configfile)
+        self._enabled = self._config.getboolean(Shooter.GENERAL_SECTION, Shooter.ENABLED_KEY)
         self._init_components()
-        Shooter._update_smartdashboard(0.0)
         super().__init__(name)
 
     def _init_components(self):
-        self._max_speed = self._config.getfloat(Shooter.GENERAL_SECTION, Shooter.MAX_SPEED_KEY)
-        if self._config.getboolean(Shooter.GENERAL_SECTION, Shooter.ENABLED_KEY):
-            self._motor = PWMVictorSPX(self._config.getint(Shooter.GENERAL_SECTION, Shooter.CHANNEL_KEY))
-            self._motor.setInverted(self._config.getboolean(Shooter.GENERAL_SECTION, Shooter.INVERTED_KEY))
+        if self._enabled:
+            self._solenoid_inverted = self._config.getboolean(Shooter.GENERAL_SECTION, Shooter.SOLENOID_INVERTED_KEY)
+            self._solenoid = Solenoid(self._config.getint(Shooter.GENERAL_SECTION, Shooter.SOLENOID_CHANNEL_KEY))
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(DoNothingShooter(self._robot, 'DoNothingShooter'))
+        self.setDefaultCommand(DoNothingShooter(self._robot))
 
-    def move(self, speed: float):
-        adjusted_speed = 0.0
-        if self._motor:
-            adjusted_speed = speed * self._max_speed
-            self._motor.set(adjusted_speed)
-        Shooter._update_smartdashboard(adjusted_speed)
+    def upheave(self, state: bool):
+        if not self._enabled:
+            return
+        self._solenoid.set(state ^ self._solenoid_inverted)
+        Shooter.update_smartdashboard(self._solenoid.get())
 
     @staticmethod
-    def _update_smartdashboard(speed: float = 0.0):
-        SmartDashboard.putNumber("Shooter Speed", speed)
+    def update_smartdashboard(solenoid: bool):
+        SmartDashboard.putBoolean("Shooter Solenoid", solenoid)

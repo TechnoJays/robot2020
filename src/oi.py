@@ -2,15 +2,15 @@ import configparser
 from enum import Enum
 from typing import List
 
-from wpilib import Joystick
 from wpilib import DriverStation
+from wpilib import Joystick
+from wpilib import SendableChooser
+from wpilib import SmartDashboard
+from wpilib.command import CommandGroup
 from wpilib.command import JoystickButton
 
-from commands.lower_arm import LowerArm
-from commands.raise_arm import RaiseArm
-from commands.shoot import Shoot
-from commands.spin_to_color import SpinToColor
-from commands.timed_spin import TimedSpin
+from commands.autonomous import DeadReckoningScore, MoveFromLine
+from commands.vacuum import Vacuum
 
 
 class JoystickAxis:
@@ -115,23 +115,19 @@ class OI:
         JoystickButtons.START = self._config.getint(OI.BUTTON_BINDING_SECTION, OI.START_KEY)
 
     def _create_smartdashboard_buttons(self):
-        pass
+        self._auto_program_chooser = SendableChooser()
+        self._auto_program_chooser.setDefaultOption("Score Low", DeadReckoningScore(self.robot))
+        self._auto_program_chooser.addOption("Move From Line", MoveFromLine(self.robot))
+        SmartDashboard.putData("Autonomous", self._auto_program_chooser)
 
     def setup_button_bindings(self):
-        raise_arm_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.Y)
-        raise_arm_button.whenPressed(RaiseArm(self.robot))
-        lower_arm_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.A)
-        lower_arm_button.whenPressed(LowerArm(self.robot))
-        shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER)
-        shoot_button.whileHeld(Shoot(self.robot, 1.0))
-        reverse_shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER)
-        reverse_shoot_button.whileHeld(Shoot(self.robot, -1.0))
-        time_spin_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.X)
-        time_spin_button.whenPressed(TimedSpin(self.robot, 16.0, 1.0))
-        target_spin_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.B)
-        target_spin_button.whenPressed(SpinToColor(self.robot, 1.0))
+        # Spaceballs!
+        suck_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.RIGHTBUMPER)
+        suck_button.whileHeld(Vacuum(self.robot, 1.0))
+        blow_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER)
+        blow_button.whileHeld(Vacuum(self.robot, -1.0))
 
-    def get_auto_choice(self) -> int:
+    def get_auto_choice(self) -> CommandGroup:
         return self._auto_program_chooser.getSelected()
 
     def get_position(self) -> int:
@@ -152,7 +148,7 @@ class OI:
             Current position for the specified axis. (Range [-1.0, 1.0])
         """
         controller = self._controllers[user.value]
-        value: float = 0.0
+        value: float
         if axis == JoystickAxis.DPADX:
             value = controller.getPOV()
             if value == 90:
