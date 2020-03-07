@@ -10,6 +10,7 @@ from wpilib.command import CommandGroup
 from wpilib.command import JoystickButton
 
 from commands.autonomous import DeadReckoningScore, MoveFromLine
+from commands.raise_shooter import RaiseShooter
 from commands.vacuum import Vacuum
 
 
@@ -126,6 +127,9 @@ class OI:
         suck_button.whileHeld(Vacuum(self.robot, 1.0))
         blow_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.LEFTBUMPER)
         blow_button.whileHeld(Vacuum(self.robot, -1.0))
+        # Shooting
+        shoot_button = JoystickButton(self._controllers[UserController.SCORING.value], JoystickButtons.A)
+        shoot_button.whileHeld(RaiseShooter(self.robot))
 
     def get_auto_choice(self) -> CommandGroup:
         return self._auto_program_chooser.getSelected()

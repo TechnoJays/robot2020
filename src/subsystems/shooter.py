@@ -4,7 +4,7 @@ from wpilib import SmartDashboard
 from wpilib import Solenoid
 from wpilib.command import Subsystem
 
-from commands.do_nothing_shooter import DoNothingShooter
+from commands.lower_shooter import LowerShooter
 
 
 class Shooter(Subsystem):
@@ -33,7 +33,7 @@ class Shooter(Subsystem):
             self._solenoid = Solenoid(self._config.getint(Shooter.GENERAL_SECTION, Shooter.SOLENOID_CHANNEL_KEY))
 
     def initDefaultCommand(self):
-        self.setDefaultCommand(DoNothingShooter(self._robot))
+        self.setDefaultCommand(LowerShooter(self._robot))
 
     def upheave(self, state: bool):
         if not self._enabled:
