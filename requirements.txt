@@ -6,3 +6,4 @@ pyfrc
 wpilib
 robotpy-commands-v1
 robotpy-rev-color
+robotpy-cscore
